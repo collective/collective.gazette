@@ -1,0 +1,57 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="collective.gazette">
+
+  <i18n:registerTranslations directory="locales" />
+    
+  <permission
+      id="collective.gazette.SendGazette"
+      title="collective.gazette: Send Gazette" />
+
+  <permission
+      id="collective.gazette.ManageSubscribers"
+      title="collective.gazette: Manage subscribers" />
+      
+  <permission
+      id="collective.gazette.AddGazetteFolder"
+      title="collective.gazette: Add GazetteFolder" />
+
+  <permission
+      id="collective.gazette.AddGazette"
+      title="collective.gazette: Add Gazette" />
+
+  <include package="plone.keyring" />
+  <include package="cornerstone.soup" />
+  <include package="plone.app.z3cform" />
+  <five:registerPackage package="." initialize=".initialize" />
+  
+  <!-- Include the sub-packages that use their own configure.zcml files. -->
+  <include package=".browser" />
+  <include package=".content" />
+  <include package=".portlets" />
+
+  <utility
+      name="collective.gazette.subscribers"
+      factory=".subscribers.SubscribersCatalog"
+      provides="cornerstone.soup.interfaces.ICatalogFactory" />
+        
+  <!-- Register the installation GenericSetup extension profile -->
+  <genericsetup:registerProfile
+      name="default"
+      title="Gazette"
+      directory="profiles/default"
+      description="Yet another newsletter product for Plone"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+  
+  <genericsetup:importStep
+        name="GazetteSetupVarious"
+        title="Collective gazette - various setup"
+        description="Setup various gazette features and configuration"
+        handler=".setuphandlers.setupVarious"
+        />
+
+</configure>

@@ -1,0 +1,336 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: collective.gazette\n"
+"POT-Creation-Date: 2010-11-07 18:44+0000\n"
+"PO-Revision-Date: 2010-11-07 19:48+0100\n"
+"Last-Translator: Radim Novotny <novotny.radim@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"X-Poedit-Language: Czech\n"
+"Language-Team: \n"
+
+#: ./portlets/gazetteportlet.py:66
+msgid "Add Gazette portlet"
+msgstr "Přidat Newsletter portlet"
+
+#: ./content/gazette.py:39
+msgid "Date, when newsletter was sent"
+msgstr "Datum, kdy byl newsletter odeslán"
+
+#: ./profiles/default/actions.xml
+msgid "Directly sends newsletter to test email address"
+msgstr "Odešle newsletter na testovací email adresu"
+
+#: ./profiles/default/actions.xml
+msgid "Display confirmation form and then allows to send gazette to all recipients."
+msgstr "Zobrazí přehled před vlastním odesláním newsletteru a následně umožní odeslat newsletter všem přihlášeným."
+
+#: ./portlets/gazetteportlet.py:74
+msgid "Edit Gazette Portlet"
+msgstr "Upravit newsletter portlet"
+
+#: ./browser/subscribe.py:21
+msgid "Email"
+msgstr "E-mail"
+
+#: ./profiles/default/types/GazetteFolder.xml
+msgid "Folder for newsletters"
+msgstr "Složka pro newslettery"
+
+#: ./browser/subscribe.py:22
+msgid "Fullname"
+msgstr "Jméno a příjmení"
+
+#: ./portlets/gazetteportlet.py:36
+#: ./profiles/default/types/Gazette.xml
+msgid "Gazette"
+msgstr "Newsletter"
+
+#: ./portlets/gazetteportlet.py:18
+msgid "Gazette folder"
+msgstr "Složka pro newslettery"
+
+#: ./content/gazettefolder.py:36
+msgid "Gazette footer text"
+msgstr "Patička newsletteru"
+
+#: ./browser/gazette.py:60
+msgid "Gazette sent to $count recipients"
+msgstr "Počet odeslaných emailů: $count  "
+
+#: ./content/gazette.py:51
+msgid "Gazette subject (email subject)"
+msgstr "Předmět newsletteru emailu)"
+
+#: ./browser/gazette.py:82
+msgid "Gazette test sent to $email"
+msgstr "Testovací newsletter byl odeslán na $email"
+
+#: ./profiles/default/types/GazetteFolder.xml
+msgid "GazetteFolder"
+msgstr "Složka pro newslettery"
+
+#: ./browser/subscribers.py:85
+msgid "Imported subscribers: ${imported}, Invalid: ${invalid}, Duplicates: ${duplicates}"
+msgstr "Import dokončen. Importováno: ${imported}, Neplatných: ${invalid}, Duplicitních: ${duplicates}"
+
+#: ./browser/subscribe.py:146
+msgid "Invalid key"
+msgstr "Neplatný klíč"
+
+#: ./profiles/default/types/Gazette.xml
+msgid "Issue of the newsletter"
+msgstr "Jedno vydání newsletteru"
+
+#: ./profiles/default/actions.xml
+msgid "List subscribers"
+msgstr "Seznam uživatelů, přihlášených k odběru"
+
+#: ./browser/gazette.py:69
+msgid "No test email set. Please check Gazette folder settings."
+msgstr "Nebyl zadán testovací email. Zkontrolujte prosím nastavení složky pro zpravodaje."
+
+#: ./browser/subscribe.py:51
+msgid "Please activate your subscription"
+msgstr "Aktivujte prosím vaše přihlášení"
+
+#: ./browser/subscribe.py:56
+msgid "Please confirm deactivation of your subscription"
+msgstr "Potvrďte prosím zrušení odběru"
+
+#: ./content/gazettefolder.py:37
+msgid "Please enter text appended to each email sent to users. It should contain $url placeholder which will be replaced with unsubscription url link"
+msgstr "Zadejte prosím text, který bude připojen ke každému emailu s newsletterem. Měl by obsahovat značku $url která bude nahrazena odkazem na odhlášení odběru."
+
+#: ./portlets/gazetteportlet.py:19
+msgid "Please select a gazette users will be subscribed to"
+msgstr "Vyberte prosím newsletter, ke kterému se budou uživatelé přihlašovat."
+
+#: ./profiles/default/actions.xml
+msgid "Send to recipients"
+msgstr "Odeslat všem odběratelům"
+
+#: ./content/gazette.py:38
+msgid "Sent at"
+msgstr "Datum odeslání"
+
+#: ./content/gazette.py:50
+msgid "Subject"
+msgstr "Předmět"
+
+#: ./profiles/default/actions.xml
+msgid "Subscribers"
+msgstr "Odběratelé"
+
+#: ./browser/subscribe.py:107
+msgid "Subscription confirmation email has been sent. Please follow instruction in the email."
+msgstr "Email pro potvrzení přihlášení byl odeslán. Postupujte prosím podle instrukcí v emailu."
+
+#: ./browser/subscribe.py:47
+msgid "Subscription form"
+msgstr "Registrace k odběru"
+
+#: ./browser/subscribe.py:122
+msgid "Such subscription does not exist."
+msgstr "Tato email adresa není registrována k odběru"
+
+#: ./content/gazettefolder.py:23
+msgid "Test email"
+msgstr "Testovací email"
+
+#: ./profiles/default/actions.xml
+msgid "Test send"
+msgstr "Testovací newsletter"
+
+#: ./content/gazettefolder.py:24
+msgid "Testing email address"
+msgstr "Testovací email adresa"
+
+#: ./portlets/gazetteportlet.py:67
+msgid "This portlet displays gazette subscription box."
+msgstr "Portlet zobrazí možnost přihlášení k odběru newsletteru"
+
+#: ./browser/subscribe.py:105
+msgid "This subscription already exists."
+msgstr "Tato email adresa je již registrována."
+
+#: ./browser/subscribe.py:120
+msgid "Unsubscribe confirmation email has been sent. Please follow instruction in the email."
+msgstr "Potvrzovací email byl odeslán. Postupujte prosím podle instrukcí v emailu."
+
+#: ./browser/subscribers.py:87
+msgid "XLS file is empty"
+msgstr "XLS soubor je prázdný"
+
+#: ./browser/subscribe.py:118
+msgid "You are not subscribed."
+msgstr "Nejste zaregistrován(a) k odběru."
+
+#: ./browser/subscribe.py:152
+msgid "Your subscription has been successfully activated."
+msgstr "Vaše registrace k odběru byla úspěšně aktivována."
+
+#: ./browser/subscribe.py:170
+msgid "Your subscription has been successfully deactivated."
+msgstr "Vaše registrace k odběru byla úspěšně zrušena."
+
+#. Default: "Import"
+#: ./browser/subscribers.pt:111
+msgid "button_import_subscribers"
+msgstr "Importovat"
+
+#. Default: "A portlet which displays gazette subscription box"
+#: ./profiles/default/portlets.xml
+msgid "description_gazette_portlet"
+msgstr "Portlet, který umožňuje přihlášení k odběru newsletteru"
+
+#. Default: "Recent newsletters"
+#: ./browser/gazettefolder.pt:14
+msgid "heading_recent_newsletters"
+msgstr "Poslední newslettery"
+
+#. Default: "Subscribers"
+#: ./browser/subscribers.pt:10
+msgid "heading_subscribers"
+msgstr "Seznam přihlášených"
+
+#. Default: "Active?"
+#: ./browser/subscribers.pt:35
+msgid "label_active"
+msgstr "Aktivní?"
+
+#. Default: "Active subscribers:"
+#: ./browser/subscribers.pt:12
+msgid "label_active_subscribers"
+msgstr "Aktivní odběratelé:"
+
+#. Default: "All"
+#: ./browser/subscribers.pt:55
+msgid "label_all"
+msgstr "Vše"
+
+#. Default: "Body Text"
+#: ./content/gazette.py:28
+msgid "label_body_text"
+msgstr "Obsah newsletteru"
+
+#. Default: "Fulltext"
+#: ./browser/subscribers.pt:27
+msgid "label_fulltext"
+msgstr "Vyhledat ve jméně nebo emailu:"
+
+#. Default: "Inactive subscribers:"
+#: ./browser/subscribers.pt:15
+msgid "label_inactive_subscribers"
+msgstr "Neaktivní odběratelé:"
+
+#. Default: "No"
+#: ./browser/subscribers.pt:48
+#: ./browser/subscribers.py:28
+msgid "label_no"
+msgstr "Ne"
+
+#. Default: "Search"
+#: ./browser/subscribers.pt:59
+msgid "label_search_subscribers"
+msgstr "Vyhledat"
+
+#. Default: "Send"
+#: ./browser/gazette_send.pt:34
+msgid "label_send_gazette"
+msgstr "Odeslat"
+
+#. Default: "Yes"
+#: ./browser/subscribers.pt:41
+#: ./browser/subscribers.py:27
+msgid "label_yes"
+msgstr "Ano"
+
+#. Default: "Import subscribers"
+#: ./browser/subscribers.pt:91
+msgid "legend_import"
+msgstr "Import odběratelů"
+
+#. Default: "Search subscribers"
+#: ./browser/subscribers.pt:25
+msgid "legend_search_subscribers"
+msgstr "Vyhledat odběratele"
+
+#. Default: "Subscribe"
+#: ./browser/subscribe.py:97
+msgid "subscribe"
+msgstr "Přihlásit"
+
+#. Default: "Active"
+#: ./browser/subscribers.pt:74
+msgid "tableheading_active"
+msgstr "Aktivní"
+
+#. Default: "Email"
+#: ./browser/subscribers.pt:73
+msgid "tableheading_email"
+msgstr "Email"
+
+#. Default: "Fullname"
+#: ./browser/subscribers.pt:72
+msgid "tableheading_fullname"
+msgstr "Jméno"
+
+#. Default: "Sent at"
+#: ./browser/gazettefolder.pt:19
+msgid "tableheading_sent_at"
+msgstr "Datum odeslání"
+
+#. Default: "Title"
+#: ./browser/gazettefolder.pt:18
+msgid "tableheading_title"
+msgstr "Nadpis"
+
+#. Default: "Please activate your subscription to ${title} by clicking at the following URL:<br /> <br /> ${url} <br />"
+#: ./browser/activation.pt:11
+msgid "text_activation_mail"
+msgstr "Aktivujte si prosím přihlášení k odběru newsletteru <strong>${title}</strong> klepnutím na následující odkaz: <br /> <br /> ${url} <br /> <br />Pokud jste si tento odběr nevyžádali, tento mail prosím ignorujte."
+
+#. Default: "Please deactivate your subscription to ${title} by clicking at the following URL:<br /> <br /> ${url} <br />"
+#: ./browser/deactivation.pt:12
+msgid "text_deactivation_mail"
+msgstr "Zrušte si prosím přihlášení k odběru newsletteru <strong>${title}</strong> klepnutím na následující odkaz: <br /> <br /> ${url} <br /> <br />Pokud jste si tento email nevyžádali, ignorujte jej prosím."
+
+#. Default: "WARNING: This gazette has been sent at ${date}. Please be sure you really want to send it again!"
+#: ./browser/gazette_send.pt:20
+msgid "text_gazette_sent"
+msgstr "POZOR: tento newsletter již byl odeslán ${date}. Jste si opravdu jisti, že jej chcete odeslat všem odběratelům znovu ? "
+
+#. Default: "You may upload XLS file with subscribers. First sheet of the file must have at least one column (column A) with email address. Second (optional) column may contain fullname (column B). Other columns are optional. If A1 does not contain valid email address, first row is treated as header row."
+#: ./browser/subscribers.pt:99
+msgid "text_import_subscribers"
+msgstr "Můžete nahrát XLS soubor se seznamem odběratelů. První list v XLS souboru musí mít alespoň jeden sloupec (sloupec A) a tento sloupec musí obsahovat email adresy. Druhá sloupec (nepovinný) může obsahovat celé jméno uživatele. Pokud buňka A1 neobsahuje platnou email adresu, pak se první řádek považuje za hlavičku a je ignorován. Všichni importovaní uživatelé jsou automaticky aktivováni a není jim odeslán žádný email ohledně aktivace."
+
+#. Default: "There are no newsletters yet."
+#: ./browser/gazettefolder.pt:34
+msgid "text_no_newsletters"
+msgstr "Nejsou zatím žádné newslettery."
+
+#. Default: "No subscribers found for given query."
+#: ./browser/subscribers.pt:85
+msgid "text_no_subscribers_found"
+msgstr "Dotazu nevyhovují žádné záznamy."
+
+#. Default: "Number of subscribers: ${count}"
+#: ./browser/gazette_send.pt:26
+msgid "text_subscriber_info"
+msgstr "Počet odběratelů: ${count}"
+
+#. Default: "Gazette portlet"
+#: ./profiles/default/portlets.xml
+msgid "title_gazette_portlet"
+msgstr "Portlet newsletteru"
+
+#. Default: "Unsubscribe"
+#: ./browser/subscribe.py:110
+msgid "unsubscribe"
+msgstr "Odhlásit"
+

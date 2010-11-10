@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<portlets
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.gazette">
+
+ <portlet
+   addview="gazette.portlets.Subscribe"
+   title="Gazette portlet"
+   description="A portlet which displays gazette subscription box"
+   i18n:attributes="title title_gazette_portlet;
+                    description description_gazette_portlet" />
+
+</portlets>

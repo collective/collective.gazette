@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<object name="portal_actions"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <object name="test" meta_type="CMF Action" i18n:domain="collective.gazette">
+   <property name="title" i18n:translate="">Test send</property>
+   <property name="description" i18n:translate="">Directly sends newsletter to test email address</property>
+   <property
+      name="url_expr">string:${object_url}/@@test-send</property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:object.meta_type == 'Gazette'</property>
+   <property name="permissions">
+    <element value="collective.gazette: Send Gazette" />
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="send" meta_type="CMF Action" i18n:domain="collective.gazette">
+   <property name="title" i18n:translate="">Send to recipients</property>
+   <property name="description" i18n:translate="">Display confirmation form and then allows to send gazette to all recipients.</property>
+   <property
+      name="url_expr">string:${object_url}/@@send</property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:object.meta_type == 'Gazette'</property>
+   <property name="permissions">
+    <element value="collective.gazette: Send Gazette" />
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+
+ <object name="object" meta_type="CMF Action Category">
+  <object name="subscribers" meta_type="CMF Action" i18n:domain="collective.gazette">
+   <property name="title" i18n:translate="">Subscribers</property>
+   <property name="description" i18n:translate="">List subscribers</property>
+   <property
+      name="url_expr">string:${object_url}/subscribers</property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:object.meta_type == 'GazetteFolder'</property>
+   <property name="permissions">
+    <element value="Modify portal content" />
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+</object>

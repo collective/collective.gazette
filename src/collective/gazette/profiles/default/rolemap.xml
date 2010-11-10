@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<rolemap>
+  <permissions>
+    <permission name="collective.gazette: Add GazetteFolder" acquire="False">
+      <role name="Manager" />
+      <role name="Contributor" />
+    </permission>
+    <permission name="collective.gazette: Add Gazette" acquire="False">
+      <role name="Manager" />
+      <role name="Contributor" />
+    </permission>
+    <permission name="collective.gazette: Send Gazette" acquire="False">
+      <role name="Manager" />
+      <role name="Reviewer" />
+    </permission>
+    <permission name="collective.gazette: Manage subscribers" acquire="False">
+      <role name="Manager" />
+      <role name="Reviewer" />
+    </permission>
+  </permissions>
+</rolemap>

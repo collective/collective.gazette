@@ -1,0 +1,80 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="collective.gazette">
+
+  <include package="plone.app.contentmenu" />
+
+  <browser:page
+      for="..interfaces.IGazetteFolder"
+      name="subscription"
+      class=".subscribe.SubscriberView"
+      layer="..interfaces.IGazetteLayer"
+      permission="zope.Public"
+      allowed_interface=".interfaces.ISubscribeView" />
+
+  <browser:page
+      for="..interfaces.IGazetteFolder"
+      name="view"
+      class=".gazettefolder.GazetteFolderView"
+      template="gazettefolder.pt"
+      layer="..interfaces.IGazetteLayer"
+      permission="zope2.View"
+      allowed_interface=".interfaces.IGazetteFolderView" />
+
+  <browser:page
+      for="..interfaces.IGazetteFolder"
+      name="subscribers"
+      class=".subscribers.SubscribersView"
+      template="subscribers.pt"
+      layer="..interfaces.IGazetteLayer"
+      permission="collective.gazette.ManageSubscribers"
+      allowed_interface=".interfaces.ISubscribersView" />
+
+  <browser:pages
+      for="..interfaces.IGazetteFolder"
+      class=".subscribe.ActivationView"
+      layer="..interfaces.IGazetteLayer"
+      permission="zope.Public">
+      
+      <browser:page
+          name="activate_subscription"
+          attribute="activate" />
+
+      <browser:page
+          name="deactivate_subscription"
+          attribute="deactivate" />
+      
+  </browser:pages>
+
+  <!-- Display before-send view -->
+  <browser:page
+      for="..interfaces.IGazette"
+      name="send"
+      class=".gazette.GazetteView"
+      template="gazette_send.pt"
+      layer="..interfaces.IGazetteLayer"
+      permission="collective.gazette.SendGazette"
+      />
+
+  <!-- Actually send the gazette to subscribers without further checks from user -->
+  <browser:page
+      for="..interfaces.IGazette"
+      name="send_gazette"
+      class=".gazette.GazetteView"
+      attribute="send_gazette"
+      layer="..interfaces.IGazetteLayer"
+      permission="collective.gazette.SendGazette"
+      />
+
+
+  <browser:page
+      for="..interfaces.IGazette"
+      name="test-send"
+      class=".gazette.GazetteView"
+      attribute="test_send"
+      layer="..interfaces.IGazetteLayer"
+      permission="collective.gazette.SendGazette"
+      />
+
+</configure>

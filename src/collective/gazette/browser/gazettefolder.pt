@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en-US" lang="en-US"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="collective.gazette">
+
+<body>
+
+    <div metal:fill-slot="content-core"
+         tal:define="results view/gazettes">
+
+        <h3 i18n:translate="heading_recent_newsletters">Recent newsletters</h3>
+        <table class="listing" tal:condition="results">
+            <thead>
+                <tr>
+                    <th i18n:translate="tableheading_title">Title</th>
+                    <th i18n:translate="tableheading_sent_at">Sent at</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tal:block tal:repeat="row results">
+                <tr tal:attributes="class python:path('repeat/row/odd') and 'odd' or 'even'">
+                    <td><a href="" tal:attributes="href row/url;
+                                                   title row/title"
+                                   tal:content="row/title">Title...</a>
+                    </td>
+                    <td tal:content="row/date">1.1.2011</td>
+                </tr>
+                </tal:block>
+            </tbody>
+        </table>
+        <p i18n:translate="text_no_newsletters"
+            tal:condition="not:results">
+            There are no newsletters yet.
+        </p>
+    </div>
+    
+</body>
+</html>

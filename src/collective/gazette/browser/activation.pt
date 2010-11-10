@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en-US" lang="en-US"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="collective.gazette">
+<body>
+<p i18n:translate="text_activation_mail"
+    tal:define="key options/key">Please activate your subscription to ${title} by clicking at the following URL:<br />
+    <br />
+    <a href="" 
+       tal:define="url string:${context/absolute_url}/activate_subscription?key=${key}"
+       tal:attributes="href url"
+       i18n:name="url"
+       tal:content="url">http://....</a>
+    <br />
+</p>
+</body>
+</html>
