@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-""" Subscibers are stored in cornerstone.soup storage """
-
+from Products.CMFCore.utils import getToolByName
 from datetime import datetime
 from zope.interface import implements
 from zope.catalog.catalog import Catalog
@@ -18,8 +16,9 @@ class Subscriber(Record):
     active = True
     timestamp = None
     key = u''
+    username = u''
 
-    def __init__(self, email, fullname=u'', active=True):
+    def __init__(self, email, fullname=u'', active=True, username=u''):
         self.email = email
         if fullname is None:
             fullname = u''
@@ -27,9 +26,20 @@ class Subscriber(Record):
         self.active = active
         self.timestamp = datetime.now()
         self.key = u''
+        self.username = username
 
     def SearchableText(self):
-        return self.email + ' ' + self.fullname
+        return self.email + ' ' + self.fullname + ' ' + self.username
+
+    def get_info(self, context):
+        result = dict(email=self.email, fullname=self.fullname)
+        if self.username:
+            acl = getToolByName(context, 'acl_users')
+            user = acl.getUserByName(self.username)
+            if user is not None:
+                result['email'] = user.getProperty('email')
+                result['fullname'] = user.getProperty('fullname')
+        return result
 
 
 class SubscribersCatalog(object):
@@ -42,10 +52,11 @@ class SubscribersCatalog(object):
                                                field_callable=True)
         catalog[u'email'] = FieldIndex(field_name='email',
                                        field_callable=False)
+        catalog[u'username'] = FieldIndex(field_name='username',
+                                          field_callable=False)
         # activation key
         catalog[u'key'] = FieldIndex(field_name='key',
                                        field_callable=False)
         catalog[u'active'] = FieldIndex(field_name='active',
                                        field_callable=False)
         return catalog
-

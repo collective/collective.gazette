@@ -7,14 +7,6 @@
 
   <browser:page
       for="..gazettefolder.IGazetteFolder"
-      name="subscription"
-      class=".subscribe.SubscriberView"
-      layer="..interfaces.IGazetteLayer"
-      permission="zope.Public"
-      allowed_interface=".interfaces.ISubscribeView" />
-
-  <browser:page
-      for="..gazettefolder.IGazetteFolder"
       name="subscribers"
       class=".subscribers.SubscribersView"
       template="subscribers.pt"

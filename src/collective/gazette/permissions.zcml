@@ -17,5 +17,9 @@
       id="collective.gazette.AddGazette"
       title="collective.gazette: Add Gazette" />
 
+  <permission
+      id="collective.gazette.IssueAutomatedNewsletter"
+      title="collective.gazette: Issue Automated Newsletter" />
+
 
 </configure>

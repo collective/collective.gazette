@@ -17,5 +17,8 @@
       <role name="Manager" />
       <role name="Reviewer" />
     </permission>
+    <permission name="collective.gazette: Issue Automated Newsletter" acquire="False">
+      <role name="Manager" />
+    </permission>
   </permissions>
 </rolemap>

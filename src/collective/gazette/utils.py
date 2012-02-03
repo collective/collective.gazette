@@ -30,18 +30,22 @@ def _from_address(name, mail):
 def send_mail(context, mfrom, mto, mto_fullname, subject, mail_text):
     email_charset = 'utf-8'
 
+    if not mto:
+        logger.error("No email defined for subscriber. Fullname: " % mto_fullname)
+        raise SMTPException("No email defined for subscriber. Fullname: " % mto_fullname)
+
     if mfrom is None:
         mfrom = _from_address(context.email_from_name,
-                              context.email_from_address)    
+                              context.email_from_address)
 
     if mto_fullname:
-        mto = _from_address(mto_fullname, mto)    
+        mto = _from_address(mto_fullname, mto)
 
     # If mail_text is not decoded here, no text is displayed in Thunderbird or Outlook
     if isinstance(mail_text, unicode):
         mail_text = mail_text.encode(email_charset)
 
-    subMsg=email.Message.Message()
+    subMsg = email.Message.Message()
     subMsg.add_header("Content-Type", "text/html", charset=email_charset)
     # add header to correctly set payload
     subMsg.add_header("Content-Transfer-Encoding", "base64")
@@ -57,10 +61,10 @@ def send_mail(context, mfrom, mto, mto_fullname, subject, mail_text):
     # If mail_text is not decoded here, host.send fails with "No message recipient"
     if isinstance(mail_text, unicode):
         mail_text = mail_text.encode(email_charset)
-    
+
     host = context.MailHost
     try:
-        host.send( mail_text )
+        host.send(mail_text)
         return True
     except SMTPRecipientsRefused:
         # Don't disclose email address on failure
@@ -68,3 +72,17 @@ def send_mail(context, mfrom, mto, mto_fullname, subject, mail_text):
     except Exception, e:
         logger.error("There was an error when sending email. Error message: %s" % str(e))
         raise SMTPException("There was an error when sending email. Error: %s" % str(e))
+
+
+# http://code.google.com/p/dexterity/issues/detail?id=123
+def FieldWidgetFactory(factory, **kw):
+    if isinstance(factory, basestring):
+        from zope.dottedname.resolve import resolve
+        factory = resolve(factory)
+
+    def wrapper(field, request):
+        widget = factory(field, request)
+        for (key, value) in kw.items():
+            setattr(widget, key, value)
+        return widget
+    return wrapper

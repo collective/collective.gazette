@@ -1,3 +1,4 @@
+from plone.app.testing import logout
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import setRoles
@@ -55,8 +56,15 @@ class SubscriptionTest(unittest.TestCase):
         self.portal.email_from_address = "portal@plone.test"
         self.mailhost = self.portal.MailHost
 
-    def test_subscribe(self):
+        self.portal.acl_users.userFolderAddUser('user1',
+                                               'secret',
+                                               ['Member'],
+                                               [])
+        logout()
 
+    def test_subscribe_anon(self):
+
+        logout()
         provideAdapter(adapts=(Interface, IBrowserRequest),
                        provides=Interface,
                        factory=SubscriberForm,
@@ -99,11 +107,14 @@ class SubscriptionTest(unittest.TestCase):
         self.assertEquals(subscriber.email, u'tester@test.com')
         self.assertEquals(subscriber.active, False)
         self.assertEquals(subscriber.key, key)
+        self.assertEquals(subscriber.username, '')
         activationView.activate(key)
         self.assertEquals(subscriber.key, u'')
         self.assertEquals(subscriber.active, True)
+        self.assertEquals(subscriber.username, '')
 
-    def test_unsubscribe(self):
+    def test_unsubscribe_anon(self):
+        logout()
         provideAdapter(adapts=(Interface, IBrowserRequest),
                        provides=Interface,
                        factory=SubscriberForm,
@@ -139,3 +150,24 @@ class SubscriptionTest(unittest.TestCase):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         subscriber = soup.data.values()[0]
         self.assertEquals(subscriber.active, False)
+
+    def test_subscribe_user(self):
+        soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
+        user = self.portal.acl_users.getUserById('user1')
+        user.setProperties(email='user@dummy.com', fullname='Joe User')
+        login(self.portal, 'user1')
+
+        request = self.request
+        subscriberForm = getMultiAdapter((self.context, request),
+                                      name=u"subscriber-form")
+        subscriberForm.update()
+        data, errors = subscriberForm.extractData()
+        # email and fullname are prefilled
+        self.assertEquals(len(errors), 0)
+        # even if I provide different email, it is ignored.
+        self.assertEquals(subscriberForm.subscribe('bleh@blah.com', 'Dummy', 'user1'), WAITING_FOR_CONFIRMATION)
+
+        subscriber = soup.data.values()[0]
+        self.assertEquals(subscriber.active, False)
+        self.assertEquals(subscriber.email, 'user@dummy.com')
+        self.assertEquals(subscriber.username, 'user1')

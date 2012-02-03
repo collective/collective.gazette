@@ -51,7 +51,6 @@ setup(name='collective.gazette',
         'test': ['plone.app.testing'],
       },
       entry_points="""
-      # -*- entry_points -*-
       [z3c.autoinclude.plugin]
       target = plone
       """,

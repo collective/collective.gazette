@@ -1,4 +1,7 @@
 # -*- coding: utf8 -*-
+from plone.z3cform.textlines.textlines import TextLinesFieldWidget
+from plone.supermodel.model import Fieldset
+from plone.supermodel.interfaces import FIELDSETS_KEY
 from Products.CMFPlone.i18nl10n import ulocalized_time
 from Acquisition import aq_inner
 from Products.CMFCore.utils import getToolByName
@@ -8,6 +11,7 @@ from collective.gazette import gazetteMessageFactory as _
 from plone.directives import form
 from zope import schema
 from collective.gazette.utils import checkEmail
+from collective.gazette.utils import FieldWidgetFactory
 from cornerstone.soup.interfaces import ISoupAnnotatable
 from five import grok
 
@@ -16,6 +20,10 @@ def validateEmail(value):
     if value and not checkEmail(value):
         raise Invalid(u"Neplatný formát emailu")
     return True
+
+
+TextFieldWidgetRows15 = FieldWidgetFactory(TextLinesFieldWidget,
+                            rows=15)
 
 
 class IGazetteFolder(form.Schema, ISoupAnnotatable):
@@ -36,6 +44,55 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
                       'unsubscription url link'),
         default=u"Unsubscribe at $url",
     )
+
+    auto_enabled = schema.Bool(
+        title=_(u'label_auto_enabled', default=u'Enable automated newsletters'),
+        default=False,
+    )
+
+    auto_text = RichText(
+        title=_(u'label_auto_text', default=u'Body Text (for automated newsletters)'),
+        description=_(u'help_auto_text', default=u'Initial body text for automated newseltters. See also "Providers" field below.'),
+        required=False,
+    )
+
+    auto_providers = schema.List(
+        required=False,
+        title=_(u'Providers (for automated newsletters)'),
+        value_type=schema.Choice(
+            vocabulary='collective.gazette.ProvidersVocabulary',
+        )
+    )
+
+    form.widget(auto_template='collective.gazette.gazettefolder.TextFieldWidgetRows15')
+    auto_template = schema.Text(
+        required=False,
+        default=u"""<!doctype html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+${body}
+</body>
+</html>
+""",
+        title=_(u'title_auto_template', default=u'HTML template for PDF version of the automated issue'),
+        description=_(u'help_auto_template', default=u'This field contains base of HTML file which will be '
+                      u'used for generating PDF version of the newsletter.'
+                      u'It must contain ${body} element which will be replaced by actual issue HTML code.'),
+    )
+
+IGazetteFolder.setTaggedValue(FIELDSETS_KEY,
+                                [Fieldset('automated', fields=['auto_enabled', 'auto_text', 'auto_providers', 'auto_template'],
+                                          label=_('fieldset_label_auto_issues', default=u"Automated issues"),
+                                          description=_('fieldset_help_auto_issues', u'Settings for automated issues. '
+                                                      u'If you want to automatically generate issues, for example from cron '
+                                                      u'every week, check this field and set text and providers fields below. '
+                                                      u'Call @@auto-issue browser view in regular intervals on this GazetteFolder. '
+                                                      u'Issues will be created automatically and marked as sent every time you call '
+                                                      u'the @@auto-issue page.')
+                                          )])
 
 
 class View(grok.View):

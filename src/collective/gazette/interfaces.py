@@ -32,5 +32,7 @@ class IGazetteTextProvider(Interface):
         in order defined by IGazetteProviderOrder utility (if exists)
     """
 
-    def get_gazette_text(user_id=None):
-        """ returns HTML code with text for particular user """
+    def get_gazette_text(gazette_folder, gazette, username=u''):
+        """ returns HTML code with text for particular user
+            @username is portal username or empty string
+        """

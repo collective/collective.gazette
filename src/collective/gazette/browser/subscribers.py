@@ -37,6 +37,7 @@ class SubscribersView(BrowserView):
                 fullname=row.fullname,
                 email=row.email,
                 active=row.active and ACTIVE or INACTIVE,
+                username=row.username,
             ))
         return result
 
@@ -75,7 +76,7 @@ class SubscribersView(BrowserView):
                     fullname = row[1].value.strip()
                     if putil.validateSingleEmailAddress(email):
                         if not [r for r in soup.lazy(email=email)]:
-                            # subscribe
+                            # subscribe (don't try to pair with portal users)
                             s = Subscriber(email=email, fullname=fullname, active=True)
                             soup.add(s)
                             valid += 1

@@ -7,12 +7,12 @@
     i18n_domain="collective.gazette">
 
   <includeDependencies package="." />
-  <grok:grok package="." />
+  <include file="permissions.zcml" />
   <include package="Products.CMFCore" file="permissions.zcml" />
 
-  <i18n:registerTranslations directory="locales" />
+  <grok:grok package="." />
 
-  <include file="permissions.zcml" />
+  <i18n:registerTranslations directory="locales" />
 
   <!-- Include the sub-packages that use their own configure.zcml files. -->
   <include package=".browser" />

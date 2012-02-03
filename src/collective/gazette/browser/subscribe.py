@@ -1,9 +1,11 @@
+from zope.component import getMultiAdapter
 import random
 
 import hashlib
-from zope import interface, schema
-from z3c.form import form, field, button
-from plone.z3cform.layout import FormWrapper
+from five import grok
+from zope import schema
+from plone.directives import form
+from z3c.form import button
 from cornerstone.soup import getSoup
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
@@ -14,14 +16,10 @@ from zExceptions import Forbidden
 from collective.gazette import config
 from collective.gazette import utils
 from collective.gazette.subscribers import Subscriber
+from collective.gazette.gazettefolder import IGazetteFolder
+from collective.gazette.interfaces import IGazetteLayer
 
 from collective.gazette import gazetteMessageFactory as _
-
-
-class ISubscriber(interface.Interface):
-    email = schema.TextLine(title=_(u"Email"))
-    fullname = schema.TextLine(title=_(u"Fullname"), required=False)
-    active = schema.Bool(title=u"Active")
 
 ALREADY_SUBSCRIBED = 0
 WAITING_FOR_CONFIRMATION = 1
@@ -29,6 +27,35 @@ SUBSCRIPTION_SUCCESSFULL = 2
 NO_SUCH_SUBSCRIPTION = 3
 ALREADY_UNSUBSCRIBED = 4
 INVALID_DATA = 5
+
+
+class ISubscriberSchema(form.Schema):
+    form.mode(for_member='hidden')
+    for_member = schema.TextLine(title=_(u"You are logged in. The following details will be used for your subscription"), required=False)
+    email = schema.TextLine(title=_(u"Email"))
+    fullname = schema.TextLine(title=_(u"Fullname"), required=False)
+    form.omitted('active')
+    active = schema.Bool(title=u"Active")
+    form.omitted('username')
+    username = schema.Bool(title=u"Username, if member")
+
+
+@form.default_value(field=ISubscriberSchema['email'])
+def default_email(data, *args):
+    mtool = getToolByName(data.context, 'portal_membership')
+    member = mtool.getAuthenticatedMember()
+    if member:
+        return member.getProperty('email', '')
+    return u''
+
+
+@form.default_value(field=ISubscriberSchema['fullname'])
+def default_fullname(data, *args):
+    mtool = getToolByName(data.context, 'portal_membership')
+    member = mtool.getAuthenticatedMember()
+    if member:
+        return member.getProperty('fullname', '')
+    return u''
 
 
 def GenerateSecret(length=64):
@@ -39,15 +66,33 @@ def GenerateSecret(length=64):
     return hashlib.sha1(secret).hexdigest()
 
 
-class SubscriberForm(form.Form):
+class SubscriberForm(form.SchemaForm):
+    grok.context(IGazetteFolder)
+    grok.name('subscription')
+    grok.layer(IGazetteLayer)
 
     activation_template = ViewPageTemplateFile('activation.pt')
     deactivation_template = ViewPageTemplateFile('deactivation.pt')
 
-    fields = field.Fields(ISubscriber).omit('active')
+    schema = ISubscriberSchema
+
     ignoreContext = True
     ignoreRequest = False
     label = _(u"Subscription form")
+
+    def update(self):
+        super(SubscriberForm, self).update()
+        self.request.set('disable_border', 1)
+
+    def updateWidgets(self):
+        super(SubscriberForm, self).updateWidgets()
+        pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
+        if pstate.anonymous():
+            self.widgets['for_member'].mode = 'hidden'
+        else:
+            self.widgets['for_member'].mode = 'display'
+            self.widgets['email'].mode = 'display'
+            self.widgets['fullname'].mode = 'display'
 
     def activation_mail(self, subscriber):
         mail_text = IStringInterpolator(self.context)(self.activation_template(key=subscriber.key))
@@ -59,10 +104,23 @@ class SubscriberForm(form.Form):
         subject = _(u"Please confirm deactivation of your subscription")
         utils.send_mail(self.context, None, subscriber.email, subscriber.fullname, subject, mail_text)
 
-    def subscribe(self, email, fullname):
-        # find if there is not existing subscription
+    def subscribe(self, email, fullname, username=u''):
+        # find if there is existing subscription
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        if not email.strip():
+        email = email.strip()
+        if username:
+            # ignore everything
+            acl = getToolByName(self.context, 'acl_users')
+            user = acl.getUserById(username)
+            if user:
+                email = user.getProperty('email', '')
+                if email:
+                    # subscribe as portal user
+                    # is username is set, subscription is considered as subscription of portal member
+                    # override fullname, if any
+                    fullname = user.getProperty('fullname', fullname)
+
+        if not email:
             return INVALID_DATA
         results = [r for r in soup.query(email=email)]
         if results:
@@ -76,7 +134,7 @@ class SubscriberForm(form.Form):
                 return WAITING_FOR_CONFIRMATION
         else:
             # new subscriber
-            s = Subscriber(email=email, fullname=fullname, active=False)
+            s = Subscriber(email=email, fullname=fullname, active=False, username=username)
             s.key = GenerateSecret()
             soup.add(s)
             self.activation_mail(s)
@@ -100,19 +158,35 @@ class SubscriberForm(form.Form):
     @button.buttonAndHandler(_(u"subscribe", default=_(u"Subscribe")),
                              name='subscribe')
     def handleSubscribe(self, action):
+        """ This form should be used for anonymous subscribers only (not for portal users currently) """
         data, errors = self.extractData()
-        if data.has_key('email'):
-            ptool = getToolByName(self.context, 'plone_utils')
-            res = self.subscribe(data['email'], data['fullname'])
-            if res == ALREADY_SUBSCRIBED:
-                ptool.addPortalMessage(_(u'This subscription already exists.'))
-            elif res == WAITING_FOR_CONFIRMATION:
-                ptool.addPortalMessage(_(u'Subscription confirmation email has been sent. Please follow instruction in the email.'))
+        pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
+        ptool = getToolByName(self.context, 'plone_utils')
+        level = 'info'
+        msg = ''
+        res = None
+        if pstate.anonymous():
+            if data.has_key('email'):
+                res = self.subscribe(data['email'], data['fullname'])
+            else:
+                msg = _(u'Invalid form data.')
+                level = 'error'
+        else:
+            res = self.subscribe('', '', username=pstate.member().getUserName())
+
+        if res == ALREADY_SUBSCRIBED:
+            msg = _(u'This subscription already exists.')
+        elif res == WAITING_FOR_CONFIRMATION:
+            msg = _(u'Subscription confirmation email has been sent. Please follow instruction in the email.')
+
+        if msg:
+            ptool.addPortalMessage(msg, level)
         self.request.response.redirect(self.action)
 
     @button.buttonAndHandler(_(u"unsubscribe", default=_(u"Unsubscribe")),
                              name='unsubscribe')
     def handleUnsubscribe(self, action):
+        """ This form should be used for anonymous subscribers only (not for portal users currently) """
         data, errors = self.extractData()
         if data.has_key('email'):
             ptool = getToolByName(self.context, 'plone_utils')
@@ -123,15 +197,9 @@ class SubscriberForm(form.Form):
                 ptool.addPortalMessage(_(u'Unsubscribe confirmation email has been sent. Please follow instruction in the email.'))
             elif res == NO_SUCH_SUBSCRIPTION:
                 ptool.addPortalMessage(_(u'Such subscription does not exist.'))
+        else:
+            ptool.addPortalMessage(_(u'Invalid form data. Email is missing.'), 'error')
         self.request.response.redirect(self.action)
-
-
-class SubscriberView(FormWrapper):
-    form = SubscriberForm
-
-    def __init__(self, context, request):
-        FormWrapper.__init__(self, context, request)
-        request.set('disable_border', 1)
 
 
 class ActivationView(BrowserView):

@@ -1,3 +1,4 @@
+from datetime import datetime
 from zope.component import queryUtility
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_parent
@@ -15,11 +16,12 @@ from collective.gazette import config
 from collective.gazette import utils
 from collective.gazette.interfaces import IGazetteTextProvider
 
+
 class GazetteView(BrowserView):
 
     @view.memoize_contextless
     def tools(self):
-        """ returns tools view. Available items are all portal_xxxxx 
+        """ returns tools view. Available items are all portal_xxxxx
             For example: catalog, membership, url
             http://dev.plone.org/plone/browser/plone.app.layout/trunk/plone/app/layout/globals/tools.py
         """
@@ -27,7 +29,7 @@ class GazetteView(BrowserView):
 
     @view.memoize_contextless
     def portal_state(self):
-        """ returns 
+        """ returns
             http://dev.plone.org/plone/browser/plone.app.layout/trunk/plone/app/layout/globals/portal.py
         """
         return getMultiAdapter((self.context, self.request), name=u"plone_portal_state")
@@ -40,39 +42,43 @@ class GazetteView(BrowserView):
     def _providers(self):
         context = aq_inner(self.context)
         providers = []
-        for name in context.providers():
+        for name in context.providers:
             util = queryUtility(IGazetteTextProvider, name=name)
             if util is not None:
                 providers.append(util)
         return providers
-        
+
     def send_gazette(self):
         context = aq_inner(self.context)
         parent = aq_parent(context)
+        now = datetime.now()
         CheckAuthenticator(self.request)
         ptool = getToolByName(self.context, 'plone_utils')
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         providers = self._providers()
         subject = context.Title()
         url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
-        footer_text = parent.getFooter().replace('${url}', '$url')            
+        footer_text = parent.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
         count = 0
-        base_text = context.getText() + '\n'
+        base_text = context.text.output + '\n'
         for s in soup.query(active=True):
             text = base_text
             for p in providers:
-                text += p.get_gazette_text(s.user_id or s.fullname)
+                text += p.get_gazette_text(parent, context, s.username)
             footer = footer_text % s.email
             mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
+            # returns email and fullname taken from memberdata if s.username is set and member exists
+            subscriber_info = s.get_info(context)
             try:
-                if utils.send_mail(context, None, s.email, s.fullname, subject, mail_text):
+                if utils.send_mail(context, None, subscriber_info['email'], subscriber_info['fullname'], subject, mail_text):
                     count += 1
             except (SMTPException, SMTPRecipientsRefused):
                 pass
-        ptool.addPortalMessage(_(u'Gazette sent to $count recipients', mapping={'count':count}))
+        context.sent_at = now
+        ptool.addPortalMessage(_(u'Gazette sent to $count recipients', mapping={'count': count}))
         self.request.response.redirect(context.absolute_url())
-        
+
     def test_send(self):
         context = aq_inner(self.context)
         parent = aq_parent(context)
@@ -85,9 +91,9 @@ class GazetteView(BrowserView):
             providers = self._providers()
             for p in providers:
                 text += p.get_gazette_text()
-            subject = context.Title() 
+            subject = context.Title()
             url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
-            footer_text = parent.getFooter().replace('${url}', '$url')            
+            footer_text = parent.getFooter().replace('${url}', '$url')
             footer_text = footer_text.replace('$url', url)
             footer = footer_text % email
             mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
@@ -95,5 +101,5 @@ class GazetteView(BrowserView):
                 utils.send_mail(context, None, email, 'Tester', subject, mail_text)
             except (SMTPException, SMTPRecipientsRefused):
                 pass
-            ptool.addPortalMessage(_(u'Gazette test sent to $email', mapping={'email':email}))
+            ptool.addPortalMessage(_(u'Gazette test sent to $email', mapping={'email': email}))
         self.request.response.redirect(context.absolute_url())
