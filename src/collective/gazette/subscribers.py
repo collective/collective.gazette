@@ -10,6 +10,7 @@ from zope.catalog.text import TextIndex
 from cornerstone.soup.interfaces import ICatalogFactory
 from cornerstone.soup import Record
 
+
 class Subscriber(Record):
 
     email = u''
@@ -17,7 +18,7 @@ class Subscriber(Record):
     active = True
     timestamp = None
     key = u''
-    
+
     def __init__(self, email, fullname=u'', active=True):
         self.email = email
         if fullname is None:
@@ -26,9 +27,10 @@ class Subscriber(Record):
         self.active = active
         self.timestamp = datetime.now()
         self.key = u''
-        
+
     def SearchableText(self):
         return self.email + ' ' + self.fullname
+
 
 class SubscribersCatalog(object):
 

@@ -1,0 +1,21 @@
+ <configure
+    xmlns="http://namespaces.zope.org/zope">
+
+  <permission
+      id="collective.gazette.SendGazette"
+      title="collective.gazette: Send Gazette" />
+
+  <permission
+      id="collective.gazette.ManageSubscribers"
+      title="collective.gazette: Manage subscribers" />
+      
+  <permission
+      id="collective.gazette.AddGazetteFolder"
+      title="collective.gazette: Add GazetteFolder" />
+
+  <permission
+      id="collective.gazette.AddGazette"
+      title="collective.gazette: Add Gazette" />
+
+
+</configure>

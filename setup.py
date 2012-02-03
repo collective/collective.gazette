@@ -25,26 +25,31 @@ setup(name='collective.gazette',
       url='http://pypi.python.org/pypi/collective.gazette',
       license='GPL',
       packages=find_packages('src', exclude=['ez_setup']),
-      package_dir = {'':'src'},
+      package_dir={'': 'src'},
       namespace_packages=['collective', ],
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
                         "Plone >=4.0",
                         "Zope2 >=2.12",
+                        'Products.CMFCore',
+                        'plone.app.dexterity',
                         "zope.i18nmessageid",
                         "zope.interface",
                         "cornerstone.soup",
                         'Acquisition',
                         'zope.interface',
                         'zope.component',
-                        'zope.catalog', # z3c.autoinclude includes zcml and it causes 
-                                        # ConfigurationError: ('Invalid directive', u'factory')
+                        # 'zope.catalog',  # z3c.autoinclude includes zcml and it causes
+                        #                  # ConfigurationError: ('Invalid directive', u'factory')
                         'zope.i18nmessageid',
                         'plone.app.z3cform',
                         'plone.stringinterp',
                         'xlrd',
                         ],
+      extras_require={
+        'test': ['plone.app.testing'],
+      },
       entry_points="""
       # -*- entry_points -*-
       [z3c.autoinclude.plugin]

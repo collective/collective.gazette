@@ -16,7 +16,7 @@
                      count view/count">
         <div class="warning" tal:condition="context/getSent_at"
              i18n:translate="text_gazette_sent">
-            WARNING: This gazette has been sent at
+            WARNING: This issue has been sent at
             <span tal:replace="python:toLocalizedTime(context.getSent_at(), 1)" i18n:name="date">1.1.2000</span>.
             Please be sure you really want to send it again!
         </div>

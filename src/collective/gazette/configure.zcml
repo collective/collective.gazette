@@ -2,35 +2,20 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:grok="http://namespaces.zope.org/grok"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.gazette">
 
+  <includeDependencies package="." />
+  <grok:grok package="." />
+  <include package="Products.CMFCore" file="permissions.zcml" />
+
   <i18n:registerTranslations directory="locales" />
-    
-  <permission
-      id="collective.gazette.SendGazette"
-      title="collective.gazette: Send Gazette" />
 
-  <permission
-      id="collective.gazette.ManageSubscribers"
-      title="collective.gazette: Manage subscribers" />
-      
-  <permission
-      id="collective.gazette.AddGazetteFolder"
-      title="collective.gazette: Add GazetteFolder" />
+  <include file="permissions.zcml" />
 
-  <permission
-      id="collective.gazette.AddGazette"
-      title="collective.gazette: Add Gazette" />
-
-  <include package="plone.keyring" />
-  <include package="cornerstone.soup" />
-  <include package="plone.app.z3cform" />
-  <five:registerPackage package="." initialize=".initialize" />
-  
   <!-- Include the sub-packages that use their own configure.zcml files. -->
   <include package=".browser" />
-  <include package=".content" />
   <include package=".portlets" />
 
   <utility
@@ -38,6 +23,12 @@
       factory=".subscribers.SubscribersCatalog"
       provides="cornerstone.soup.interfaces.ICatalogFactory" />
         
+  <utility
+    component=".vocabulary.providersVocabularyFactory"
+    provides="zope.schema.interfaces.IVocabularyFactory"
+    name="collective.gazette.ProvidersVocabulary"
+    />
+
   <!-- Register the installation GenericSetup extension profile -->
   <genericsetup:registerProfile
       name="default"
@@ -47,11 +38,4 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   
-  <genericsetup:importStep
-        name="GazetteSetupVarious"
-        title="Collective gazette - various setup"
-        description="Setup various gazette features and configuration"
-        handler=".setuphandlers.setupVarious"
-        />
-
 </configure>

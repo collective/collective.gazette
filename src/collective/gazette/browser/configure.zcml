@@ -6,7 +6,7 @@
   <include package="plone.app.contentmenu" />
 
   <browser:page
-      for="..interfaces.IGazetteFolder"
+      for="..gazettefolder.IGazetteFolder"
       name="subscription"
       class=".subscribe.SubscriberView"
       layer="..interfaces.IGazetteLayer"
@@ -14,16 +14,7 @@
       allowed_interface=".interfaces.ISubscribeView" />
 
   <browser:page
-      for="..interfaces.IGazetteFolder"
-      name="view"
-      class=".gazettefolder.GazetteFolderView"
-      template="gazettefolder.pt"
-      layer="..interfaces.IGazetteLayer"
-      permission="zope2.View"
-      allowed_interface=".interfaces.IGazetteFolderView" />
-
-  <browser:page
-      for="..interfaces.IGazetteFolder"
+      for="..gazettefolder.IGazetteFolder"
       name="subscribers"
       class=".subscribers.SubscribersView"
       template="subscribers.pt"
@@ -32,7 +23,7 @@
       allowed_interface=".interfaces.ISubscribersView" />
 
   <browser:pages
-      for="..interfaces.IGazetteFolder"
+      for="..gazettefolder.IGazetteFolder"
       class=".subscribe.ActivationView"
       layer="..interfaces.IGazetteLayer"
       permission="zope.Public">
@@ -49,7 +40,7 @@
 
   <!-- Display before-send view -->
   <browser:page
-      for="..interfaces.IGazette"
+      for="..gazette.IGazette"
       name="send"
       class=".gazette.GazetteView"
       template="gazette_send.pt"
@@ -59,7 +50,7 @@
 
   <!-- Actually send the gazette to subscribers without further checks from user -->
   <browser:page
-      for="..interfaces.IGazette"
+      for="..gazette.IGazette"
       name="send_gazette"
       class=".gazette.GazetteView"
       attribute="send_gazette"
@@ -69,7 +60,7 @@
 
 
   <browser:page
-      for="..interfaces.IGazette"
+      for="..gazette.IGazette"
       name="test-send"
       class=".gazette.GazetteView"
       attribute="test_send"

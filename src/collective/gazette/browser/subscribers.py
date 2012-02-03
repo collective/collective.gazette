@@ -9,18 +9,19 @@ import xlrd
 from collective.gazette import config
 from collective.gazette.subscribers import Subscriber
 
+
 class SubscribersView(BrowserView):
     implements(ISubscribersView)
-    
+
     template = ViewPageTemplateFile('subscribers.pt')
-    
+
     def count(self):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         result = dict()
         result['active'] = len([x for x in soup.lazy(active=True)])
         result['inactive'] = len([x for x in soup.lazy(active=False)])
         return result
-        
+
     def search(self, **query):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         result = []
@@ -33,12 +34,12 @@ class SubscribersView(BrowserView):
             rows = soup.data.values()
         for row in rows:
             result.append(dict(
-                fullname = row.fullname,
-                email = row.email,
-                active = row.active and ACTIVE or INACTIVE,
+                fullname=row.fullname,
+                email=row.email,
+                active=row.active and ACTIVE or INACTIVE,
             ))
         return result
-        
+
     def __call__(self):
         result = []
         if self.request.get('form.submitted') == '1':
@@ -62,7 +63,7 @@ class SubscribersView(BrowserView):
             duplicates = 0
             if sh.nrows > 0:
                 email = sh.row(0)[0].value
-                if putil.validateSingleEmailAddress(email): 
+                if putil.validateSingleEmailAddress(email):
                     start = 0
                 else:
                     start = 1
@@ -72,10 +73,10 @@ class SubscribersView(BrowserView):
                     row = sh.row(rx)
                     email = row[0].value.strip()
                     fullname = row[1].value.strip()
-                    if putil.validateSingleEmailAddress(email): 
-                        if not [r for r in soup.lazy(email = email)]:
+                    if putil.validateSingleEmailAddress(email):
+                        if not [r for r in soup.lazy(email=email)]:
                             # subscribe
-                            s = Subscriber(email = email, fullname = fullname, active = True)
+                            s = Subscriber(email=email, fullname=fullname, active=True)
                             soup.add(s)
                             valid += 1
                         else:
@@ -85,5 +86,5 @@ class SubscribersView(BrowserView):
                 putil.addPortalMessage(_("Imported subscribers: ${imported}, Invalid: ${invalid}, Duplicates: ${duplicates}", mapping={'imported': valid, 'duplicates': duplicates, 'invalid': invalid}))
             else:
                 putil.addPortalMessage(_("XLS file is empty"))
-            
-        return self.template(searchresults = result)
+
+        return self.template(searchresults=result)

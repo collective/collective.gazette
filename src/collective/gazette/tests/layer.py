@@ -1,25 +1,46 @@
-from Testing import ZopeTestCase as ztc
+from Acquisition import aq_base
+from Products.MailHost.interfaces import IMailHost
+from Products.CMFPlone.tests.utils import MockMailHost
+from zope.component import getSiteManager
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import applyProfile
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import IntegrationTesting, FunctionalTesting
 
-from Products.PloneTestCase import ptc
-from Products.PloneTestCase import layer
-from Products.Five import zcml
-from Products.Five import fiveconfigure
 
-ptc.setupPloneSite(
-    extension_profiles=('collective.gazette:default', )
-)
+class GazetteSuite(PloneSandboxLayer):
 
-class GazetteLayer(layer.PloneSite):
-    """Configure collective.gazette"""
+    defaultBases = (PLONE_FIXTURE,)
 
-    @classmethod
-    def setUp(cls):
-        fiveconfigure.debug_mode = True
+    def setUpZope(self, app, configurationContext):
         import collective.gazette
-        zcml.load_config("configure.zcml", collective.gazette)
-        fiveconfigure.debug_mode = False
-        ztc.installPackage("collective.gazette", quiet=1)
+        self.loadZCML(package=collective.gazette)
 
-    @classmethod
-    def tearDown(cls):
-        pass
+    def setUpPloneSite(self, portal):
+        # Install into Plone site using portal_setup
+        applyProfile(portal, 'collective.gazette:default')
+
+        # I put this code to test setUp but the mailhost was not mocked
+        # If it is here in layer, it seems to be working fine.
+        portal._original_MailHost = portal.MailHost
+        portal.MailHost = mailhost = MockMailHost('MailHost')
+        sm = getSiteManager(context=portal)
+        sm.unregisterUtility(provided=IMailHost)
+        sm.registerUtility(mailhost, provided=IMailHost)
+
+    def tearDownPloneSite(self, portal):
+        portal.MailHost = portal._original_MailHost
+        sm = getSiteManager(context=portal)
+        sm.unregisterUtility(provided=IMailHost)
+        sm.registerUtility(aq_base(portal._original_MailHost), provided=IMailHost)
+
+
+GAZETTE_FIXTURE = GazetteSuite()
+GAZETTE_INTEGRATION_TESTING = IntegrationTesting(
+                                        bases=(GAZETTE_FIXTURE,),
+                                        name="Gazette:Integration"
+                                    )
+GAZETTE_FUNCTIONAL_TESTING = FunctionalTesting(
+                                        bases=(GAZETTE_FIXTURE,),
+                                        name="Gazette:Functional"
+                                    )

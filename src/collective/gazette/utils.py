@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+import re
 import email
 import logging
 from smtplib import SMTPRecipientsRefused
@@ -7,6 +9,10 @@ from zope.component import getUtility
 from Products.CMFCore.interfaces import IPropertiesTool
 
 logger = logging.getLogger('collective.gazette.utils')
+
+checkEmail = re.compile(
+        r"[a-zA-Z0-9._%-]+@([a-zA-Z0-9-]+\.)*[a-zA-Z]{2,4}").match
+
 
 def _from_address(name, mail):
     properties = getUtility(IPropertiesTool)

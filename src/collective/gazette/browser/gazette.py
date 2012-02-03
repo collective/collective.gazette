@@ -1,3 +1,4 @@
+from zope.component import queryUtility
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_parent
 from Acquisition import aq_inner
@@ -12,6 +13,7 @@ from cornerstone.soup import getSoup
 from collective.gazette import gazetteMessageFactory as _
 from collective.gazette import config
 from collective.gazette import utils
+from collective.gazette.interfaces import IGazetteTextProvider
 
 class GazetteView(BrowserView):
 
@@ -35,21 +37,32 @@ class GazetteView(BrowserView):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         return len([x for x in soup.lazy(active=True)])
 
-    # def _render_gazette_for(self, email, fullname):
-    # 
+    def _providers(self):
+        context = aq_inner(self.context)
+        providers = []
+        for name in context.providers():
+            util = queryUtility(IGazetteTextProvider, name=name)
+            if util is not None:
+                providers.append(util)
+        return providers
+        
     def send_gazette(self):
         context = aq_inner(self.context)
         parent = aq_parent(context)
         CheckAuthenticator(self.request)
         ptool = getToolByName(self.context, 'plone_utils')
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        text = context.getText()
+        providers = self._providers()
         subject = context.Title()
         url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
         footer_text = parent.getFooter().replace('${url}', '$url')            
         footer_text = footer_text.replace('$url', url)
         count = 0
+        base_text = context.getText() + '\n'
         for s in soup.query(active=True):
+            text = base_text
+            for p in providers:
+                text += p.get_gazette_text(s.user_id or s.fullname)
             footer = footer_text % s.email
             mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
             try:
@@ -68,7 +81,10 @@ class GazetteView(BrowserView):
         if not email:
             ptool.addPortalMessage(_(u'No test email set. Please check Gazette folder settings.'), 'error')
         else:
-            text = context.getText()
+            text = context.getText() + '\n'
+            providers = self._providers()
+            for p in providers:
+                text += p.get_gazette_text()
             subject = context.Title() 
             url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
             footer_text = parent.getFooter().replace('${url}', '$url')            

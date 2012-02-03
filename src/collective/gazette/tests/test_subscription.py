@@ -1,24 +1,22 @@
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import setRoles
+from plone.app.testing import login
 import re
 import email
-from Acquisition import aq_base
+
 from zope.interface import alsoProvides
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.annotation.interfaces import IAttributeAnnotatable
 from zope.interface import Interface
 from zope.component import getMultiAdapter
-from zope.publisher.browser import TestRequest
 from zope.component import provideAdapter
 from z3c.form.interfaces import IFormLayer
-import unittest
-from zope.component import getSiteManager
-
-from Products.MailHost.interfaces import IMailHost
-from Products.CMFPlone.tests.utils import MockMailHost
-
 from cornerstone.soup import getSoup
-from Products.PloneTestCase.ptc import PloneTestCase
-from collective.gazette.tests.layer import GazetteLayer
 
+import unittest2 as unittest
+from collective.gazette.tests.layer import GAZETTE_INTEGRATION_TESTING
+from Products.CMFPlone.utils import _createObjectByType
 from collective.gazette import config
 from collective.gazette.browser.subscribe import SubscriberForm
 from collective.gazette.browser.subscribe import ActivationView
@@ -30,48 +28,33 @@ from collective.gazette.browser.subscribe import \
     ALREADY_UNSUBSCRIBED, \
     INVALID_DATA
 
+
 def _parseMessage(str):
     parser = email.parser.Parser()
-    return parser.parsestr(str) 
+    return parser.parsestr(str)
 
-def make_request(form={}):
-    request = TestRequest()
-    request.form.update(form)
-    alsoProvides(request, IFormLayer)
-    alsoProvides(request, IAttributeAnnotatable)
-    return request        
 
-class SubscriptionTest(PloneTestCase):
+class SubscriptionTest(unittest.TestCase):
 
-    layer = GazetteLayer
+    layer = GAZETTE_INTEGRATION_TESTING
 
-    def afterSetUp(self):
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        alsoProvides(self.request, IFormLayer)
+        alsoProvides(self.request, IAttributeAnnotatable)
+
         # First we need to create some content.
-        self.loginAsPortalOwner()
-        typetool = self.portal.portal_types
-        typetool.constructContent('GazetteFolder', self.portal, 'gazettefolder')
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        login(self.portal, TEST_USER_NAME)
+        _createObjectByType('gazette.GazetteFolder', self.portal, 'gazettefolder')
         self.gfolder = self.portal.gazettefolder
-        self.request = self.app.REQUEST
         self.context = self.gfolder
-
-        # Set up a mock mailhost
-        self.portal._original_MailHost = self.portal.MailHost
-        self.portal.MailHost = mailhost = MockMailHost('MailHost')
-        sm = getSiteManager(context=self.portal)
-        sm.unregisterUtility(provided=IMailHost)
-        sm.registerUtility(mailhost, provided=IMailHost)
 
         # We need to fake a valid mail setup
         self.portal.email_from_address = "portal@plone.test"
         self.mailhost = self.portal.MailHost
 
-    def beforeTearDown(self):
-        self.portal.MailHost = self.portal._original_MailHost
-        sm = getSiteManager(context=self.portal)
-        sm.unregisterUtility(provided=IMailHost)
-        sm.registerUtility(aq_base(self.portal._original_MailHost), 
-                           provided=IMailHost)
-                
     def test_subscribe(self):
 
         provideAdapter(adapts=(Interface, IBrowserRequest),
@@ -80,8 +63,8 @@ class SubscriptionTest(PloneTestCase):
                        name=u"subscriber-form")
 
         # empty form
-        request = make_request(form={})
-        subscriberForm = getMultiAdapter((self.context, request), 
+        request = self.request
+        subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
@@ -89,8 +72,8 @@ class SubscriptionTest(PloneTestCase):
         self.assertEquals(subscriberForm.subscribe('', ''), INVALID_DATA)
 
         # fill email only
-        request = make_request(form={'form.widgets.email': 'tester@test.com'})
-        subscriberForm = getMultiAdapter((self.context, request), 
+        request.form = {'form.widgets.email': u'tester@test.com'}
+        subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
@@ -127,8 +110,9 @@ class SubscriptionTest(PloneTestCase):
                        name=u"subscriber-form")
 
         # subscribe user
-        request = make_request(form={'form.widgets.email': 'tester@test.com'})
-        subscriberForm = getMultiAdapter((self.context, request), 
+        request = self.request
+        request.form = {'form.widgets.email': u'tester@test.com'}
+        subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
@@ -141,7 +125,7 @@ class SubscriptionTest(PloneTestCase):
         groups = re.search('\?key=([a-f0-9]+)', msgtext).groups()
         self.assertEquals(len(groups), 1)
         key = groups[0]
-        
+
         # activate
         activationView = ActivationView(self.context, request)
         activationView.activate(key)
@@ -155,6 +139,3 @@ class SubscriptionTest(PloneTestCase):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         subscriber = soup.data.values()[0]
         self.assertEquals(subscriber.active, False)
-
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)

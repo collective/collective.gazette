@@ -17,6 +17,7 @@ from collective.gazette.subscribers import Subscriber
 
 from collective.gazette import gazetteMessageFactory as _
 
+
 class ISubscriber(interface.Interface):
     email = schema.TextLine(title=_(u"Email"))
     fullname = schema.TextLine(title=_(u"Fullname"), required=False)
@@ -29,20 +30,22 @@ NO_SUCH_SUBSCRIPTION = 3
 ALREADY_UNSUBSCRIBED = 4
 INVALID_DATA = 5
 
+
 def GenerateSecret(length=64):
-    secret=""
+    secret = ""
     for i in range(length):
-        secret+=chr(random.getrandbits(8))
-    
+        secret += chr(random.getrandbits(8))
+
     return hashlib.sha1(secret).hexdigest()
 
+
 class SubscriberForm(form.Form):
-    
+
     activation_template = ViewPageTemplateFile('activation.pt')
     deactivation_template = ViewPageTemplateFile('deactivation.pt')
-    
+
     fields = field.Fields(ISubscriber).omit('active')
-    ignoreContext = True # don't use context to get widget data
+    ignoreContext = True
     ignoreRequest = False
     label = _(u"Subscription form")
 
@@ -61,7 +64,7 @@ class SubscriberForm(form.Form):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         if not email.strip():
             return INVALID_DATA
-        results = [r for r in soup.query(email = email)]
+        results = [r for r in soup.query(email=email)]
         if results:
             if results[0].active:
                 return ALREADY_SUBSCRIBED
@@ -73,7 +76,7 @@ class SubscriberForm(form.Form):
                 return WAITING_FOR_CONFIRMATION
         else:
             # new subscriber
-            s = Subscriber(email = email, fullname = fullname, active = False)
+            s = Subscriber(email=email, fullname=fullname, active=False)
             s.key = GenerateSecret()
             soup.add(s)
             self.activation_mail(s)
@@ -81,7 +84,7 @@ class SubscriberForm(form.Form):
 
     def unsubscribe(self, email):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        results = [r for r in soup.query(email = email)]
+        results = [r for r in soup.query(email=email)]
         if results:
             if not results[0].active:
                 return ALREADY_UNSUBSCRIBED
@@ -122,18 +125,17 @@ class SubscriberForm(form.Form):
                 ptool.addPortalMessage(_(u'Such subscription does not exist.'))
         self.request.response.redirect(self.action)
 
-# do not use wrap_form but custom view due to disable_border settings.
-# SubscriberView = wrap_form(SubscriberForm)
-class SubscriberView(FormWrapper):
 
+class SubscriberView(FormWrapper):
     form = SubscriberForm
 
     def __init__(self, context, request):
         FormWrapper.__init__(self, context, request)
-        request.set('disable_border', 1)    
+        request.set('disable_border', 1)
+
 
 class ActivationView(BrowserView):
-    
+
     def activate(self, key):
         """ """
         if not key:
@@ -141,7 +143,7 @@ class ActivationView(BrowserView):
         ptool = getToolByName(self.context, 'plone_utils')
         # get subscriber by key
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        results = [r for r in soup.query(key = key)]
+        results = [r for r in soup.query(key=key)]
         if len(results) != 1:
             ptool.addPortalMessage(_(u'Invalid key'))
         else:
@@ -159,7 +161,7 @@ class ActivationView(BrowserView):
         ptool = getToolByName(self.context, 'plone_utils')
         # get subscriber by key
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        results = [r for r in soup.query(key = key)]
+        results = [r for r in soup.query(key=key)]
         if len(results) != 1:
             ptool.addPortalMessage(_(u'Invalid key'))
         else:

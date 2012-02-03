@@ -9,10 +9,11 @@ from plone.memoize.compress import xhtml_compress
 from plone.memoize.instance import memoize
 
 from collective.gazette import gazetteMessageFactory as _
-from collective.gazette.interfaces import IGazetteFolder
+from collective.gazette.gazettefolder import IGazetteFolder
 
 from plone.app.portlets.portlets import base
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
+
 
 class IGazettePortlet(IPortletDataProvider):
     gazette = schema.Choice(title=_(u"Gazette folder"),
@@ -20,10 +21,10 @@ class IGazettePortlet(IPortletDataProvider):
                              required=True,
                              default=u'',
                              source=SearchableTextSourceBinder(
-                                        query={'object_provides':IGazetteFolder.__identifier__}, 
+                                        query={'object_provides': IGazetteFolder.__identifier__},
                                         default_query=''),
                             )
-    
+
 
 class Assignment(base.Assignment):
     implements(IGazettePortlet)
@@ -34,6 +35,7 @@ class Assignment(base.Assignment):
     @property
     def title(self):
         return _(u"Gazette")
+
 
 class Renderer(base.Renderer):
 
@@ -50,7 +52,7 @@ class Renderer(base.Renderer):
     @property
     def available(self):
         return not not self.gazette_content()
-        
+
     def render(self):
         return xhtml_compress(self._template())
 
@@ -61,6 +63,7 @@ class Renderer(base.Renderer):
         path = "%s%s" % (self.navigation_root_path, self.data.gazette)
         return self.portal.restrictedTraverse(path, None)
 
+
 class AddForm(base.AddForm):
     form_fields = form.Fields(IGazettePortlet)
     label = _(u"Add Gazette portlet")
@@ -68,6 +71,7 @@ class AddForm(base.AddForm):
 
     def create(self, data):
         return Assignment(gazette=data.get('gazette', ''))
+
 
 class EditForm(base.EditForm):
     form_fields = form.Fields(IGazettePortlet)
