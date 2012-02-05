@@ -77,12 +77,15 @@ class AutomatedView(grok.View):
         now = datetime.now()
         wtool = getToolByName(context, 'portal_workflow')
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
-        subject = context.Title()
+        # strftime accepts any text, not only strftime characters
+        subject = now.strftime(context.auto_subject.encode('utf-8'))
         url = context.absolute_url() + '/subscription?form.widgets.email=%s'
         footer_text = context.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
         count = 0
-        base_text = context.auto_text.output + '\n'
+        base_text = ''
+        if context.auto_text:
+            base_text += now.strftime(context.auto_text.output.encode('utf-8')) + '\n'
         providers = self._providers()
         gid = 'issue-%s' % now.strftime("%Y-%m-%d-%H-%M-%S.%f")
         idx = 0

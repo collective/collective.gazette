@@ -60,9 +60,19 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
         default=False,
     )
 
+    auto_subject = schema.TextLine(
+        title=_('Automated issue email subject'),
+        description=_(u'Enter email subject. You can use any strftime compatible '
+                      u'formatting. The current date and time will be used to format date/time.'),
+        default=u'New issue at %-d.%-m.%Y',
+        required=False,
+    )
+
     auto_text = RichText(
         title=_(u'label_auto_text', default=u'Body Text (for automated newsletters)'),
-        description=_(u'help_auto_text', default=u'Initial body text for automated newseltters. See also "Providers" field below.'),
+        description=_(u'help_auto_text', default=u'Initial body text for automated '
+                                                 u'newsletters. See also "Providers" field below. '
+                                                 u'Text may contain strftime formatting.'),
         required=False,
     )
 
@@ -94,7 +104,9 @@ ${body}
     )
 
 IGazetteFolder.setTaggedValue(FIELDSETS_KEY,
-                                [Fieldset('automated', fields=['auto_enabled', 'auto_text', 'auto_providers', 'auto_template'],
+                                [Fieldset('automated', fields=['auto_enabled', 'auto_subject',
+                                                               'auto_text', 'auto_providers',
+                                                               'auto_template'],
                                           label=_('fieldset_label_auto_issues', default=u"Automated issues"),
                                           description=_('fieldset_help_auto_issues', u'Settings for automated issues. '
                                                       u'If you want to automatically generate issues, for example from cron '

@@ -12,7 +12,7 @@ from collective.gazette import gazetteMessageFactory as _
 class IGazette(form.Schema):
 
     text = RichText(
-        title=_(u'label_body_text', default=u'Body Text'),
+        title=_(u'label_body_text', default=u'Body Text. Please note, title of this item is used as email subject.'),
         required=False,
     )
 
