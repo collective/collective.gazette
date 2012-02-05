@@ -47,7 +47,7 @@ msgstr "Jméno a příjmení"
 #: ./portlets/gazetteportlet.py:36
 #: ./profiles/default/types/Gazette.xml
 msgid "Gazette"
-msgstr "Newsletter"
+msgstr "Newsletter (vydání)"
 
 #: ./portlets/gazetteportlet.py:18
 msgid "Gazette folder"

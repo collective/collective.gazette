@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from plone.formwidget.contenttree import PathSourceBinder
+from collective.gazette.gazette import IGazette
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.supermodel.model import Fieldset
 from plone.supermodel.interfaces import FIELDSETS_KEY
@@ -10,6 +12,7 @@ from plone.app.textfield import RichText
 from collective.gazette import gazetteMessageFactory as _
 from plone.directives import form
 from zope import schema
+from z3c.relationfield.schema import RelationChoice
 from collective.gazette.utils import checkEmail
 from collective.gazette.utils import FieldWidgetFactory
 from cornerstone.soup.interfaces import ISoupAnnotatable
@@ -43,6 +46,13 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
                       'placeholder which will be replaced with '
                       'unsubscription url link'),
         default=u"Unsubscribe at $url",
+    )
+
+    form.mode(most_recent_issue='display')
+    most_recent_issue = RelationChoice(
+        title=_(u'label_most_recent_issue', default=u'Most recent issue of this gazette. This field is set automatically.'),
+        required=False,
+        source=PathSourceBinder(object_provides=IGazette.__identifier__)
     )
 
     auto_enabled = schema.Bool(

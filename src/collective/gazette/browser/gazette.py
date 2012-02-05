@@ -76,6 +76,7 @@ class GazetteView(BrowserView):
             except (SMTPException, SMTPRecipientsRefused):
                 pass
         context.sent_at = now
+        parent.most_recent_issue = context
         ptool.addPortalMessage(_(u'Gazette sent to $count recipients', mapping={'count': count}))
         self.request.response.redirect(context.absolute_url())
 

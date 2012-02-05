@@ -30,7 +30,15 @@ class IGazetteTextProvider(Interface):
 
         Providers are rendered in order of registration or
         in order defined by IGazetteProviderOrder utility (if exists)
+
+        Provider can access gazettefolder or gazette items. Gazette parameter
+        may be None in case of automated newsletter. Gazette folder contains
+        most_recent_issue relation to the latest issue of the gazette (usually
+        this will be a week, month or so old gazette issue)
     """
+
+    def __repr__(self):
+        """ String representation of the provider (will be shown in the vocabulary """
 
     def get_gazette_text(gazette_folder, gazette, username=u''):
         """ returns HTML code with text for particular user

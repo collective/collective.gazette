@@ -9,7 +9,7 @@
       name="url_expr">string:${object_url}/@@test-send</property>
    <property name="icon_expr"></property>
    <property
-      name="available_expr">python:object.meta_type == 'Gazette'</property>
+      name="available_expr">python:object.portal_type == 'gazette.Gazette'</property>
    <property name="permissions">
     <element value="collective.gazette: Send Gazette" />
    </property>
@@ -23,12 +23,27 @@
       name="url_expr">string:${object_url}/@@send</property>
    <property name="icon_expr"></property>
    <property
-      name="available_expr">python:object.meta_type == 'Gazette'</property>
+      name="available_expr">python:object.portal_type == 'gazette.Gazette'</property>
    <property name="permissions">
     <element value="collective.gazette: Send Gazette" />
    </property>
    <property name="visible">True</property>
   </object>
+
+  <object name="auto-test" meta_type="CMF Action" i18n:domain="collective.gazette">
+   <property name="title" i18n:translate="">Test automatic issue</property>
+   <property name="description" i18n:translate="">This will raise auto-issue process in testing mode</property>
+   <property
+      name="url_expr">string:${object_url}/auto-issue-test</property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:object.portal_type == 'gazette.GazetteFolder' and object.auto_enabled</property>
+   <property name="permissions">
+    <element value="collective.gazette: Issue Automated Newsletter" />
+   </property>
+   <property name="visible">True</property>
+  </object>
+
  </object>
 
  <object name="object" meta_type="CMF Action Category">
@@ -39,7 +54,7 @@
       name="url_expr">string:${object_url}/subscribers</property>
    <property name="icon_expr"></property>
    <property
-      name="available_expr">python:object.meta_type == 'GazetteFolder'</property>
+      name="available_expr">python:object.portal_type == 'gazette.GazetteFolder'</property>
    <property name="permissions">
     <element value="Modify portal content" />
    </property>

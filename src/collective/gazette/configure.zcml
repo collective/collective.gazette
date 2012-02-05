@@ -32,7 +32,7 @@
   <!-- Register the installation GenericSetup extension profile -->
   <genericsetup:registerProfile
       name="default"
-      title="Gazette"
+      title="Gazette (collective.gazette)"
       directory="profiles/default"
       description="Yet another newsletter product for Plone"
       provides="Products.GenericSetup.interfaces.EXTENSION"
