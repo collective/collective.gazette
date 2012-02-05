@@ -44,3 +44,30 @@ class IGazetteTextProvider(Interface):
         """ returns HTML code with text for particular user
             @username is portal username or empty string
         """
+
+
+class IGazetteSubscription(Interface):
+    """ simple adapter to IGazetteFolder which allows to subscribe and unsubscribe
+        users
+    """
+    def subscribe(email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True):
+        """
+            Subscribe anonymous or portal member.
+            if @username is set, ignore email and fullname and subscribe user with his
+            email/fullname read from member properties.
+            If send_activation_mail is True, request for activation email is sent.
+            If wait_for_confirmation is not set, user is immediatelly unsubscribed, even if
+            activation email is sent.
+
+            Returns integer code according to config.py constants.
+        """
+
+    def unsubscribe(email, send_deactivation_mail=True, wait_for_confirmation=True):
+        """
+            Unsubscribe user by email.
+            If send_deactivation_mail is True, request for deactivation email is sent.
+            If wait_for_confirmation is not set, user is immediatelly unsubscribed, even if
+            deactivation email is sent.
+
+            Returns integer code according to config.py constants.
+        """
