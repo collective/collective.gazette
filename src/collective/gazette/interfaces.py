@@ -71,3 +71,6 @@ class IGazetteSubscription(Interface):
 
             Returns integer code according to config.py constants.
         """
+
+    def status(email):
+        """ Returns True if the subscription is active """

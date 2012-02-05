@@ -83,7 +83,7 @@ class SubscriberForm(form.SchemaForm):
         level = 'info'
         msg = ''
         res = None
-        subs = IGazetteSubscription(self.context)
+        subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
         if pstate.anonymous():
             if data.has_key('email'):
                 res = subs.subscribe(data['email'], data['fullname'])
@@ -109,7 +109,7 @@ class SubscriberForm(form.SchemaForm):
         data, errors = self.extractData()
         if data.has_key('email'):
             ptool = getToolByName(self.context, 'plone_utils')
-            subs = IGazetteSubscription(self.context)
+            subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
             res = subs.unsubscribe(data['email'])
             if res == config.ALREADY_UNSUBSCRIBED:
                 ptool.addPortalMessage(_(u'You are not subscribed.'))
@@ -140,7 +140,7 @@ class ActivationView(BrowserView):
             s.key = u''
             soup.reindex([s])
             ptool.addPortalMessage(_(u'Your subscription has been successfully activated.'))
-        self.request.response.redirect(self.context.absolute_url() + '/subscription')
+        self.request.response.redirect(self.context.absolute_url())
 
     def deactivate(self, key):
         """ """
@@ -158,4 +158,4 @@ class ActivationView(BrowserView):
             s.key = u''
             soup.reindex([s])
             ptool.addPortalMessage(_(u'Your subscription has been successfully deactivated.'))
-        self.request.response.redirect(self.context.absolute_url() + '/subscription')
+        self.request.response.redirect(self.context.absolute_url())

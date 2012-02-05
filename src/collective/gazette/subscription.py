@@ -4,6 +4,7 @@ import hashlib
 import random
 from zope.interface import implements
 from zope.component import adapts
+from zope.publisher.interfaces.http import IHTTPRequest
 from Products.CMFCore.utils import getToolByName
 from plone.app.dexterity.behaviors.metadata import _
 from cornerstone.soup import getSoup
@@ -25,14 +26,15 @@ def GenerateSecret(length=64):
 
 
 class SubscriptionAdapter(object):
-    adapts(IGazetteFolder)
+    adapts(IGazetteFolder, IHTTPRequest)
     implements(IGazetteSubscription)
 
     activation_template = ViewPageTemplateFile('browser/activation.pt')
     deactivation_template = ViewPageTemplateFile('browser/deactivation.pt')
 
-    def __init__(self, context):
+    def __init__(self, context, request):
         self.context = context
+        self.request = request
 
     def activation_mail(self, subscriber):
         mail_text = IStringInterpolator(self.context)(self.activation_template(key=subscriber.key))
@@ -43,6 +45,13 @@ class SubscriptionAdapter(object):
         mail_text = IStringInterpolator(self.context)(self.deactivation_template(key=subscriber.key))
         subject = _(u"Please confirm deactivation of your subscription")
         utils.send_mail(self.context, None, subscriber.email, subscriber.fullname, subject, mail_text)
+
+    def status(self, email):
+        soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
+        results = [r for r in soup.query(email=email)]
+        if results:
+            return results[0].active
+        return False
 
     def subscribe(self, email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True):
         # find if there is existing subscription
@@ -75,7 +84,7 @@ class SubscriptionAdapter(object):
                     s.active = True
                     result = config.SUBSCRIPTION_SUCCESSFULL
                 soup.reindex([s])
-                if self.send_activation_mail:
+                if send_activation_mail:
                     self.activation_mail(s)
                 return result
         else:
@@ -88,7 +97,7 @@ class SubscriptionAdapter(object):
                 s.active = True
                 result = config.SUBSCRIPTION_SUCCESSFULL
             soup.add(s)
-            if self.send_activation_mail:
+            if send_activation_mail:
                 self.activation_mail(s)
             return result
 
