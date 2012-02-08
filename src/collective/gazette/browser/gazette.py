@@ -61,15 +61,14 @@ class GazetteView(BrowserView):
         footer_text = parent.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
         count = 0
-        base_text = context.text.output + '\n'
+        text = context.text.output + '\n'
+        for p in providers:
+            text += p.get_gazette_text(parent, context)
         for s in soup.query(active=True):
-            text = base_text
-            for p in providers:
-                text += p.get_gazette_text(parent, context, s.username)
-            footer = footer_text % s.email
-            mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
             # returns email and fullname taken from memberdata if s.username is set and member exists
             subscriber_info = s.get_info(context)
+            footer = footer_text % subscriber_info
+            mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
             try:
                 if utils.send_mail(context, None, subscriber_info['email'], subscriber_info['fullname'], subject, mail_text):
                     count += 1
@@ -91,7 +90,7 @@ class GazetteView(BrowserView):
             text = context.getText() + '\n'
             providers = self._providers()
             for p in providers:
-                text += p.get_gazette_text()
+                text += p.get_gazette_text(parent, context)
             subject = context.Title()
             url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
             footer_text = parent.getFooter().replace('${url}', '$url')

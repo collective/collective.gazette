@@ -18,6 +18,8 @@ from collective.gazette.interfaces import IGazetteTextProvider
 from collective.gazette import utils
 from collective.gazette import config
 from five import grok
+import logging
+logger = logging.getLogger('gazette')
 
 
 class AutomatedTestView(grok.View):
@@ -95,12 +97,12 @@ class AutomatedView(grok.View):
         # create anonymous issue text to be stored to portal
         text = safe_unicode(base_text)
         for p in providers:
-            text += safe_unicode(p.get_gazette_text(context, None, ''))
+            text += safe_unicode(p.get_gazette_text(context, None))
 
         # Create PDF version of the newsletter using wkhtml2pdf as archive of the issue
         pdf_raw = self.make_pdf(text, html_only)
         if not pdf_raw:
-            return 'Unable to create PDF'
+            logger.warning('Unable to create PDF of automatically issued gazette.')
         if not test_mode:
             # create Gazette object representing this issue
             gid = context.invokeFactory('gazette.Gazette', gid)
@@ -115,21 +117,19 @@ class AutomatedView(grok.View):
                 wtool.doActionFor(gazette, 'publish')
             except:
                 pass
-            # Attach it to gazette
-            fid = gazette.invokeFactory('File', gid + '.pdf')
-            file_pdf = gazette[fid]
-            file_pdf.setTitle(gazette.title)
-            file_pdf.setFile(pdf_raw, mimetype='application/pdf')
-            file_pdf.processForm()
+            # Attach PDF to gazette
+            if pdf_raw:
+                fid = gazette.invokeFactory('File', gid + '.pdf')
+                file_pdf = gazette[fid]
+                file_pdf.setTitle(gazette.title)
+                file_pdf.setFile(pdf_raw, mimetype='application/pdf')
+                file_pdf.processForm()
 
             for s in soup.query(active=True):
-                text = base_text
-                for p in providers:
-                    text += p.get_gazette_text(context, None, s.username)
-                footer = footer_text % s.email
-                mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
                 # returns email and fullname taken from memberdata if s.username is set and member exists
                 subscriber_info = s.get_info(context)
+                footer = footer_text % subscriber_info
+                mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
                 try:
                     if utils.send_mail(context, None, subscriber_info['email'], subscriber_info['fullname'], subject, mail_text):
                         count += 1

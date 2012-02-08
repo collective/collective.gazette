@@ -40,9 +40,8 @@ class IGazetteTextProvider(Interface):
     def __repr__(self):
         """ String representation of the provider (will be shown in the vocabulary """
 
-    def get_gazette_text(gazette_folder, gazette, username=u''):
-        """ returns HTML code with text for particular user
-            @username is portal username or empty string
+    def get_gazette_text(gazette_folder, gazette):
+        """ returns HTML code
         """
 
 
