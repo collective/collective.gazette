@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<object name="gazette.Gazette" meta_type="Dexterity FTI"
+<object name="gazette.GazetteIssue" meta_type="Dexterity FTI"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="collective.gazette">
     
@@ -18,9 +18,9 @@
     </property>
     
     <!-- Schema, class and security -->
-    <property name="schema">collective.gazette.gazette.IGazette</property> 
+    <property name="schema">collective.gazette.issue.IGazetteIssue</property> 
     <property name="klass">plone.dexterity.content.Container</property>
-    <property name="add_permission">collective.gazette.AddGazette</property>
+    <property name="add_permission">collective.gazette.AddGazetteIssue</property>
  
     <!-- enabled behaviors -->
     <property name="behaviors">

@@ -32,9 +32,9 @@
 
   <!-- Display before-send view -->
   <browser:page
-      for="..gazette.IGazette"
+      for="..issue.IGazetteIssue"
       name="send"
-      class=".gazette.GazetteView"
+      class=".issue.GazetteIssueView"
       template="gazette_send.pt"
       layer="..interfaces.IGazetteLayer"
       permission="collective.gazette.SendGazette"
@@ -42,9 +42,9 @@
 
   <!-- Actually send the gazette to subscribers without further checks from user -->
   <browser:page
-      for="..gazette.IGazette"
+      for="..issue.IGazetteIssue"
       name="send_gazette"
-      class=".gazette.GazetteView"
+      class=".issue.GazetteIssueView"
       attribute="send_gazette"
       layer="..interfaces.IGazetteLayer"
       permission="collective.gazette.SendGazette"
@@ -52,9 +52,9 @@
 
 
   <browser:page
-      for="..gazette.IGazette"
+      for="..issue.IGazetteIssue"
       name="test-send"
-      class=".gazette.GazetteView"
+      class=".issue.GazetteIssueView"
       attribute="test_send"
       layer="..interfaces.IGazetteLayer"
       permission="collective.gazette.SendGazette"

@@ -14,8 +14,8 @@
       title="collective.gazette: Add GazetteFolder" />
 
   <permission
-      id="collective.gazette.AddGazette"
-      title="collective.gazette: Add Gazette" />
+      id="collective.gazette.AddGazetteIssue"
+      title="collective.gazette: Add Gazette Issue" />
 
   <permission
       id="collective.gazette.IssueAutomatedNewsletter"

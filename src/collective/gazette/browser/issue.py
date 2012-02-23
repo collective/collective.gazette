@@ -17,7 +17,7 @@ from collective.gazette import utils
 from collective.gazette.interfaces import IGazetteTextProvider
 
 
-class GazetteView(BrowserView):
+class GazetteIssueView(BrowserView):
 
     @view.memoize_contextless
     def tools(self):
@@ -76,7 +76,7 @@ class GazetteView(BrowserView):
                 pass
         context.sent_at = now
         parent.most_recent_issue = context
-        ptool.addPortalMessage(_(u'Gazette sent to $count recipients', mapping={'count': count}))
+        ptool.addPortalMessage(_(u'Gazette has been sent to $count recipients', mapping={'count': count}))
         self.request.response.redirect(context.absolute_url())
 
     def test_send(self):
@@ -87,13 +87,13 @@ class GazetteView(BrowserView):
         if not email:
             ptool.addPortalMessage(_(u'No test email set. Please check Gazette folder settings.'), 'error')
         else:
-            text = context.getText() + '\n'
+            text = context.text.output + '\n'
             providers = self._providers()
             for p in providers:
                 text += p.get_gazette_text(parent, context)
             subject = context.Title()
             url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
-            footer_text = parent.getFooter().replace('${url}', '$url')
+            footer_text = parent.footer.output.replace('${url}', '$url')
             footer_text = footer_text.replace('$url', url)
             footer = footer_text % email
             mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
@@ -101,5 +101,5 @@ class GazetteView(BrowserView):
                 utils.send_mail(context, None, email, 'Tester', subject, mail_text)
             except (SMTPException, SMTPRecipientsRefused):
                 pass
-            ptool.addPortalMessage(_(u'Gazette test sent to $email', mapping={'email': email}))
+            ptool.addPortalMessage(_(u'Gazette test has been sent to $email', mapping={'email': email}))
         self.request.response.redirect(context.absolute_url())

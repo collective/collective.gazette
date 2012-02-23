@@ -16,12 +16,13 @@ from z3c.form.interfaces import IFormLayer
 from cornerstone.soup import getSoup
 
 import unittest2 as unittest
+from collective.gazette.interfaces import IGazetteSubscription
 from collective.gazette.tests.layer import GAZETTE_INTEGRATION_TESTING
 from Products.CMFPlone.utils import _createObjectByType
 from collective.gazette import config
 from collective.gazette.browser.subscribe import SubscriberForm
 from collective.gazette.browser.subscribe import ActivationView
-from collective.gazette.browser.subscribe import \
+from collective.gazette.config import \
     WAITING_FOR_CONFIRMATION, \
     INVALID_DATA
 
@@ -68,12 +69,14 @@ class SubscriptionTest(unittest.TestCase):
 
         # empty form
         request = self.request
+        adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)
+
         subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
         self.assertEquals(len(errors), 1)
-        self.assertEquals(subscriberForm.subscribe('', ''), INVALID_DATA)
+        self.assertEquals(adapter.subscribe('', ''), INVALID_DATA)
 
         # fill email only
         request.form = {'form.widgets.email': u'tester@test.com'}
@@ -82,11 +85,11 @@ class SubscriptionTest(unittest.TestCase):
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
         self.assertEquals(len(errors), 0)
-        self.assertEquals(subscriberForm.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
+        self.assertEquals(adapter.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
         self.assertEquals(len(self.mailhost.messages), 1)
 
         # second subscription of inactive user resends activation email
-        self.assertEquals(subscriberForm.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
+        self.assertEquals(adapter.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
         self.assertEquals(len(self.mailhost.messages), 2)
         msg = _parseMessage(self.mailhost.messages[1])
         self.assertEquals(msg['To'], 'tester@test.com')
@@ -118,12 +121,13 @@ class SubscriptionTest(unittest.TestCase):
 
         # subscribe user
         request = self.request
+        adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)
         request.form = {'form.widgets.email': u'tester@test.com'}
         subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
-        self.assertEquals(subscriberForm.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
+        self.assertEquals(adapter.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
 
         msg = _parseMessage(self.mailhost.messages[0])
         self.assertEquals(msg['To'], 'tester@test.com')
@@ -137,7 +141,7 @@ class SubscriptionTest(unittest.TestCase):
         activationView = ActivationView(self.context, request)
         activationView.activate(key)
 
-        self.assertEquals(subscriberForm.unsubscribe('tester@test.com'), WAITING_FOR_CONFIRMATION)
+        self.assertEquals(adapter.unsubscribe('tester@test.com'), WAITING_FOR_CONFIRMATION)
         msg = _parseMessage(self.mailhost.messages[1])
         msgtext = msg.get_payload(decode=True)
         key = re.search('\?key=([a-f0-9]+)', msgtext).groups()[0]
@@ -154,6 +158,7 @@ class SubscriptionTest(unittest.TestCase):
         login(self.portal, 'user1')
 
         request = self.request
+        adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)
         subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
@@ -161,7 +166,7 @@ class SubscriptionTest(unittest.TestCase):
         # email and fullname are prefilled
         self.assertEquals(len(errors), 0)
         # even if I provide different email, it is ignored.
-        self.assertEquals(subscriberForm.subscribe('bleh@blah.com', 'Dummy', 'user1'), WAITING_FOR_CONFIRMATION)
+        self.assertEquals(adapter.subscribe('bleh@blah.com', 'Dummy', 'user1'), WAITING_FOR_CONFIRMATION)
 
         subscriber = soup.data.values()[0]
         self.assertEquals(subscriber.active, False)
@@ -170,29 +175,16 @@ class SubscriptionTest(unittest.TestCase):
 
     def test_subscribe_1000users(self):
         logout()
-        provideAdapter(adapts=(Interface, IBrowserRequest),
-                       provides=Interface,
-                       factory=SubscriberForm,
-                       name=u"subscriber-form")
 
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         request = self.request
-        subscriberForm = getMultiAdapter((self.context, request),
-                                      name=u"subscriber-form")
-        subscriberForm.update()
-        # from time import time
-        # print "Subscription process start"
-        # start = time()
-        for i in range(1, 1001):
-            self.assertEquals(subscriberForm.subscribe('bleh@blah-%d.com' % i, 'Dummy %d' % i), WAITING_FOR_CONFIRMATION)
-        # print "Subscription process: %.2fsec." % (time() - start)
+        adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)
 
-        # start = time()
+        for i in range(1, 1001):
+            self.assertEquals(adapter.subscribe('bleh@blah-%d.com' % i, 'Dummy %d' % i), WAITING_FOR_CONFIRMATION)
+
         subscribers = soup.data.values()
         self.assertEquals(len(subscribers), 1000)
-        # print "Retrieve all subscribers: %.5fsec." % (time() - start)
 
-        # start = time()
         subscriber = soup.query(email='bleh@blah-149.com').next()
         self.assertEquals(subscriber.fullname, 'Dummy 149')
-        # print "Search for one subscriber: %.5fsec." % (time() - start)

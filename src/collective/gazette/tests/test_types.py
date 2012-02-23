@@ -6,7 +6,7 @@ from plone.app.testing import setRoles
 from plone.dexterity.interfaces import IDexterityFTI
 import unittest2 as unittest
 from collective.gazette.tests.layer import GAZETTE_INTEGRATION_TESTING
-from collective.gazette.gazette import IGazette
+from collective.gazette.issue import IGazetteIssue
 from collective.gazette.gazettefolder import IGazetteFolder
 
 
@@ -57,22 +57,22 @@ class TestGazette(unittest.TestCase):
 
     def test_adding(self):
         # cannot be added do folder, only to GazetteFolder
-        self.assertRaises(ValueError, self.portal.invokeFactory, 'gazette.Gazette', 'issue')
-        self.folder.invokeFactory('gazette.Gazette', 'issue')
+        self.assertRaises(ValueError, self.portal.invokeFactory, 'gazette.GazetteIssue', 'issue')
+        self.folder.invokeFactory('gazette.GazetteIssue', 'issue')
         p1 = self.folder['issue']
-        self.failUnless(IGazette.providedBy(p1))
+        self.failUnless(IGazetteIssue.providedBy(p1))
 
     def test_fti(self):
-        fti = queryUtility(IDexterityFTI, name='gazette.Gazette')
+        fti = queryUtility(IDexterityFTI, name='gazette.GazetteIssue')
         self.assertNotEquals(None, fti)
 
     def test_schema(self):
-        fti = queryUtility(IDexterityFTI, name='gazette.Gazette')
+        fti = queryUtility(IDexterityFTI, name='gazette.GazetteIssue')
         schema = fti.lookupSchema()
-        self.assertEquals(IGazette, schema)
+        self.assertEquals(IGazetteIssue, schema)
 
     def test_factory(self):
-        fti = queryUtility(IDexterityFTI, name='gazette.Gazette')
+        fti = queryUtility(IDexterityFTI, name='gazette.GazetteIssue')
         factory = fti.factory
         new_object = createObject(factory)
-        self.failUnless(IGazette.providedBy(new_object))
+        self.failUnless(IGazetteIssue.providedBy(new_object))

@@ -5,7 +5,7 @@
       <role name="Manager" />
       <role name="Contributor" />
     </permission>
-    <permission name="collective.gazette: Add Gazette" acquire="False">
+    <permission name="collective.gazette: Add Gazette Issue" acquire="False">
       <role name="Manager" />
       <role name="Contributor" />
     </permission>

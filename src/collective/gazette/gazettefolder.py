@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from plone.formwidget.contenttree import PathSourceBinder
-from collective.gazette.gazette import IGazette
+from collective.gazette.issue import IGazetteIssue
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.supermodel.model import Fieldset
 from plone.supermodel.interfaces import FIELDSETS_KEY
@@ -52,7 +52,7 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
     most_recent_issue = RelationChoice(
         title=_(u'label_most_recent_issue', default=u'Most recent issue of this gazette. This field is set automatically.'),
         required=False,
-        source=PathSourceBinder(object_provides=IGazette.__identifier__)
+        source=PathSourceBinder(object_provides=IGazetteIssue.__identifier__)
     )
 
     auto_enabled = schema.Bool(

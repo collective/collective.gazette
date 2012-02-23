@@ -9,7 +9,7 @@ from five import grok
 from collective.gazette import gazetteMessageFactory as _
 
 
-class IGazette(form.Schema):
+class IGazetteIssue(form.Schema):
 
     text = RichText(
         title=_(u'label_body_text', default=u'Body Text. Please note, title of this item is used as email subject.'),
@@ -19,6 +19,7 @@ class IGazette(form.Schema):
     providers = schema.List(
         required=False,
         title=_(u'Providers'),
+        default=[],
         value_type=schema.Choice(
             vocabulary='collective.gazette.ProvidersVocabulary',
         )
@@ -33,7 +34,7 @@ class IGazette(form.Schema):
 
 
 # Use catalog 'start' index for sent_at for Gazette
-@indexer(IGazette)
+@indexer(IGazetteIssue)
 def start_indexer(obj):
     return obj.sent_at
 grok.global_adapter(start_indexer, name="start")
