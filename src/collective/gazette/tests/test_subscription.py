@@ -22,11 +22,7 @@ from collective.gazette import config
 from collective.gazette.browser.subscribe import SubscriberForm
 from collective.gazette.browser.subscribe import ActivationView
 from collective.gazette.browser.subscribe import \
-    ALREADY_SUBSCRIBED, \
     WAITING_FOR_CONFIRMATION, \
-    SUBSCRIPTION_SUCCESSFULL, \
-    NO_SUCH_SUBSCRIPTION, \
-    ALREADY_UNSUBSCRIBED, \
     INVALID_DATA
 
 
@@ -179,24 +175,24 @@ class SubscriptionTest(unittest.TestCase):
                        factory=SubscriberForm,
                        name=u"subscriber-form")
 
-        from time import time
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         request = self.request
         subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
+        # from time import time
         # print "Subscription process start"
-        start = time()
+        # start = time()
         for i in range(1, 1001):
             self.assertEquals(subscriberForm.subscribe('bleh@blah-%d.com' % i, 'Dummy %d' % i), WAITING_FOR_CONFIRMATION)
         # print "Subscription process: %.2fsec." % (time() - start)
 
-        start = time()
+        # start = time()
         subscribers = soup.data.values()
         self.assertEquals(len(subscribers), 1000)
         # print "Retrieve all subscribers: %.5fsec." % (time() - start)
 
-        start = time()
+        # start = time()
         subscriber = soup.query(email='bleh@blah-149.com').next()
         self.assertEquals(subscriber.fullname, 'Dummy 149')
         # print "Search for one subscriber: %.5fsec." % (time() - start)
