@@ -79,6 +79,7 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
     auto_providers = schema.List(
         required=False,
         title=_(u'Providers (for automated newsletters)'),
+        default=list(),
         value_type=schema.Choice(
             vocabulary='collective.gazette.ProvidersVocabulary',
         )
@@ -127,7 +128,7 @@ class View(grok.View):
         path = '/'.join(context.getPhysicalPath())
         result = []
         ctool = getToolByName(context, 'portal_catalog')
-        for brain in ctool(portal_type='gazette.Gazette',
+        for brain in ctool(portal_type='gazette.GazetteIssue',
                            path=path,
                            sort_on='start',
                            sort_order='reverse'):

@@ -105,10 +105,10 @@ class AutomatedView(grok.View):
             logger.warning('Unable to create PDF of automatically issued gazette.')
         if not test_mode:
             # create Gazette object representing this issue
-            gid = context.invokeFactory('gazette.Gazette', gid)
+            gid = context.invokeFactory('gazette.GazetteIssue', gid)
             gazette = context[gid]
             # Fill the newly create Gazette object with generated data
-            gazette.title = ''  # FIXME
+            gazette.title = subject
             gazette.text = text
             gazette.providers = ()
             gazette.sent_at = now
@@ -117,8 +117,8 @@ class AutomatedView(grok.View):
                 wtool.doActionFor(gazette, 'publish')
             except:
                 pass
-            # Attach PDF to gazette
-            if pdf_raw:
+            # Attach PDF to gazette but only if it is not HTML only mode
+            if pdf_raw and not html_only:
                 fid = gazette.invokeFactory('File', gid + '.pdf')
                 file_pdf = gazette[fid]
                 file_pdf.setTitle(gazette.title)

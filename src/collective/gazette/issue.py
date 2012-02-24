@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from DateTime import DateTime
 from plone.app.textfield import RichText
 from plone.indexer import indexer
 
@@ -36,5 +37,8 @@ class IGazetteIssue(form.Schema):
 # Use catalog 'start' index for sent_at for Gazette
 @indexer(IGazetteIssue)
 def start_indexer(obj):
-    return obj.sent_at
+    if obj.sent_at:
+        return obj.sent_at
+    else:
+        return DateTime()
 grok.global_adapter(start_indexer, name="start")

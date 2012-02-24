@@ -9,7 +9,7 @@
       name="url_expr">string:${object_url}/@@test-send</property>
    <property name="icon_expr"></property>
    <property
-      name="available_expr">python:object.portal_type == 'gazette.Gazette'</property>
+      name="available_expr">python:object.portal_type == 'gazette.GazetteIssue'</property>
    <property name="permissions">
     <element value="collective.gazette: Send Gazette" />
    </property>
@@ -23,7 +23,7 @@
       name="url_expr">string:${object_url}/@@send</property>
    <property name="icon_expr"></property>
    <property
-      name="available_expr">python:object.portal_type == 'gazette.Gazette'</property>
+      name="available_expr">python:object.portal_type == 'gazette.GazetteIssue'</property>
    <property name="permissions">
     <element value="collective.gazette: Send Gazette" />
    </property>

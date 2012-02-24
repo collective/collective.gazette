@@ -1,19 +1,22 @@
+from plone.app.testing import TEST_USER_PASSWORD
+from plone.testing.z2 import Browser
 from Products.CMFPlone.utils import _createObjectByType
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import setRoles
 import unittest2 as unittest
-from collective.gazette.tests.layer import GAZETTE_INTEGRATION_TESTING
+from collective.gazette.tests.layer import GAZETTE_FUNCTIONAL_TESTING
 from collective.gazette import config
 from cornerstone.soup import getSoup
 from collective.gazette.subscribers import Subscriber
 from collective.gazette.browser.subscribers import SubscribersView
 from plone.app.testing import login
+import transaction
 
 
 class SubscribersTest(unittest.TestCase):
 
-    layer = GAZETTE_INTEGRATION_TESTING
+    layer = GAZETTE_FUNCTIONAL_TESTING
 
     def setUp(self):
         self.portal = self.layer['portal']
@@ -56,3 +59,12 @@ class SubscribersTest(unittest.TestCase):
         self.assertEquals(len(view.search(email='test2')), 0)  # field index
         self.assertEquals(len(view.search(SearchableText='test2*')), 1)
         self.assertEquals(len(view.search(SearchableText='test2')), 1)  # Splitter by @ works...
+
+    def test_view(self):
+        transaction.commit()
+        browser = Browser(self.layer['app'])
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        browser.open(self.gfolder.absolute_url() + '/subscribers')
+        self.failUnless('<li><label>Active subscribers:</label>\n           3' in browser.contents)
+        self.failUnless('<li><label>Inactive subscribers:</label>\n           2' in browser.contents)
