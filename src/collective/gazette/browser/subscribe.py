@@ -88,6 +88,7 @@ class SubscriberForm(form.SchemaForm):
                              name='subscribe')
     def handleSubscribe(self, action):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
+        context = self.context
         data, errors = self.extractData()
         pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
         ptool = getToolByName(self.context, 'plone_utils')
@@ -107,7 +108,11 @@ class SubscriberForm(form.SchemaForm):
                     msg = _(u'Invalid form data.')
                     level = 'error'
             else:
-                res = subs.subscribe('', '', username=pstate.member().getUserName())
+                if not default_email(self):
+                    msg = _(u'Your user account has no email defined.')
+                    level = 'error'
+                else:
+                    res = subs.subscribe('', '', username=pstate.member().getUserName())
 
             if res == config.ALREADY_SUBSCRIBED:
                 msg = _(u'This subscription already exists.')
