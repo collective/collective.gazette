@@ -19,7 +19,7 @@
       class=".subscribe.ActivationView"
       layer="..interfaces.IGazetteLayer"
       permission="zope.Public">
-      
+
       <browser:page
           name="activate_subscription"
           attribute="activate" />
@@ -27,7 +27,7 @@
       <browser:page
           name="deactivate_subscription"
           attribute="deactivate" />
-      
+
   </browser:pages>
 
   <!-- Display before-send view -->
@@ -60,4 +60,12 @@
       permission="collective.gazette.SendGazette"
       />
 
+<!--   <browser:page
+      name="ploneform-render-widget"
+      for="z3c.form.interfaces.ISingleCheckBoxWidget"
+      layer="..interfaces.IGazetteLayer"
+      class=".widgets.widgets.RenderSingleCheckboxWidget"
+      permission="zope.Public"
+      />
+ -->
 </configure>

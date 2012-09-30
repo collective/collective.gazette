@@ -1,3 +1,4 @@
+from Acquisition import aq_inner
 from zope.component import getMultiAdapter
 import random
 
@@ -10,6 +11,7 @@ from cornerstone.soup import getSoup
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 from zExceptions import Forbidden
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 from collective.gazette import config
 from collective.gazette.gazettefolder import IGazetteFolder
@@ -28,6 +30,7 @@ class ISubscriberSchema(form.Schema):
     active = schema.Bool(title=u"Active")
     form.omitted('username')
     username = schema.Bool(title=u"Username, if member")
+    tos = schema.Bool(title=u"TOS")
 
 
 @form.default_value(field=ISubscriberSchema['email'])
@@ -63,9 +66,17 @@ class SubscriberForm(form.SchemaForm):
         super(SubscriberForm, self).update()
         self.request.set('disable_border', 1)
 
+    def updateFields(self):
+        super(SubscriberForm, self).updateFields()
+        self.fields['tos'].field.title = self.context.subscription_tos_text
+
     def updateWidgets(self):
         super(SubscriberForm, self).updateWidgets()
         pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
+        context = aq_inner(self.context)
+        if not context.subscription_require_tos:
+            self.widgets['tos'].mode = 'hidden'
+
         if pstate.anonymous():
             self.widgets['for_member'].mode = 'hidden'
         else:
@@ -83,20 +94,25 @@ class SubscriberForm(form.SchemaForm):
         level = 'info'
         msg = ''
         res = None
-        subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
-        if pstate.anonymous():
-            if data.has_key('email'):
-                res = subs.subscribe(data['email'], data['fullname'])
-            else:
-                msg = _(u'Invalid form data.')
-                level = 'error'
-        else:
-            res = subs.subscribe('', '', username=pstate.member().getUserName())
+        if context.subscription_require_tos:
+            if not data.get('tos'):
+                msg = _(u'You must accept terms of service')
 
-        if res == config.ALREADY_SUBSCRIBED:
-            msg = _(u'This subscription already exists.')
-        elif res == config.WAITING_FOR_CONFIRMATION:
-            msg = _(u'Subscription confirmation email has been sent. Please follow instruction in the email.')
+        if not msg:
+            subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
+            if pstate.anonymous():
+                if data.has_key('email'):
+                    res = subs.subscribe(data['email'], data['fullname'])
+                else:
+                    msg = _(u'Invalid form data.')
+                    level = 'error'
+            else:
+                res = subs.subscribe('', '', username=pstate.member().getUserName())
+
+            if res == config.ALREADY_SUBSCRIBED:
+                msg = _(u'This subscription already exists.')
+            elif res == config.WAITING_FOR_CONFIRMATION:
+                msg = _(u'Subscription confirmation email has been sent. Please follow instruction in the email.')
 
         if msg:
             ptool.addPortalMessage(msg, level)
@@ -107,8 +123,8 @@ class SubscriberForm(form.SchemaForm):
     def handleUnsubscribe(self, action):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
         data, errors = self.extractData()
+        ptool = getToolByName(self.context, 'plone_utils')
         if data.has_key('email'):
-            ptool = getToolByName(self.context, 'plone_utils')
             subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
             res = subs.unsubscribe(data['email'])
             if res == config.ALREADY_UNSUBSCRIBED:

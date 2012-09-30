@@ -38,6 +38,28 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
         constraint=validateEmail,
     )
 
+    subscription_prolog = RichText(
+        required=False,
+        title=_('Subscription prolog'),
+        description=_('Please enter text displayed on subscription page '
+                      'before fields for fullname and email.'),
+        default=u"",
+    )
+
+    subscription_require_tos = schema.Bool(
+        required=False,
+        default=True,
+        title=_('Require confirmation of TOS on the subscription screen?'),
+    )
+
+    subscription_tos_text = schema.TextLine(
+        required=False,
+        title=_('Subscription TOS text'),
+        description=_('Please enter text displayed on subscription page '
+                      'as a label for Terms of Service checkbox.'),
+        default=u"I accept your TOS",
+    )
+
     footer = RichText(
         required=False,
         title=_('Gazette footer text'),
