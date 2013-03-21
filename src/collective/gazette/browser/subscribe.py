@@ -1,18 +1,17 @@
 from Acquisition import aq_inner
 from zope.component import getMultiAdapter
-import random
-
-import hashlib
 from five import grok
 from zope import schema
+from zope.app.component.hooks import getSite
 from plone.directives import form
 from z3c.form import button
 from cornerstone.soup import getSoup
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 from zExceptions import Forbidden
-from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+from zope.interface import Invalid
 
+from collective.gazette.utils import checkEmail
 from collective.gazette import config
 from collective.gazette.gazettefolder import IGazetteFolder
 from collective.gazette.interfaces import IGazetteLayer
@@ -21,10 +20,16 @@ from collective.gazette.interfaces import IGazetteSubscription
 from collective.gazette import gazetteMessageFactory as _
 
 
+def validateEmail(value):
+    if value and not checkEmail(value):
+        raise Invalid(_(u"Invalid email format"))
+    return True
+
+
 class ISubscriberSchema(form.Schema):
     form.mode(for_member='hidden')
     for_member = schema.TextLine(title=_(u"You are logged in. The following details will be used for your subscription"), required=False)
-    email = schema.TextLine(title=_(u"Email"))
+    email = schema.TextLine(title=_(u"Email"), constraint=validateEmail)
     fullname = schema.TextLine(title=_(u"Fullname"), required=False)
     form.omitted('active')
     active = schema.Bool(title=u"Active")
@@ -35,7 +40,7 @@ class ISubscriberSchema(form.Schema):
 
 @form.default_value(field=ISubscriberSchema['email'])
 def default_email(data, *args):
-    mtool = getToolByName(data.context, 'portal_membership')
+    mtool = getToolByName(getSite(), 'portal_membership')
     member = mtool.getAuthenticatedMember()
     if member:
         return member.getProperty('email', '')
@@ -44,7 +49,7 @@ def default_email(data, *args):
 
 @form.default_value(field=ISubscriberSchema['fullname'])
 def default_fullname(data, *args):
-    mtool = getToolByName(data.context, 'portal_membership')
+    mtool = getToolByName(getSite(), 'portal_membership')
     member = mtool.getAuthenticatedMember()
     if member:
         return member.getProperty('fullname', '')
@@ -58,9 +63,12 @@ class SubscriberForm(form.SchemaForm):
 
     schema = ISubscriberSchema
 
-    ignoreContext = True
+    ignoreContext = False
     ignoreRequest = False
     label = _(u"Subscription form")
+
+    def getContent(self):
+        return {}
 
     def update(self):
         super(SubscriberForm, self).update()
@@ -90,6 +98,7 @@ class SubscriberForm(form.SchemaForm):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
         context = self.context
         data, errors = self.extractData()
+
         pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
         ptool = getToolByName(self.context, 'plone_utils')
         level = 'info'
@@ -102,7 +111,7 @@ class SubscriberForm(form.SchemaForm):
         if not msg:
             subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
             if pstate.anonymous():
-                if data.has_key('email'):
+                if 'email' in data:
                     res = subs.subscribe(data['email'], data['fullname'])
                 else:
                     msg = _(u'Invalid form data.')
@@ -121,7 +130,8 @@ class SubscriberForm(form.SchemaForm):
 
         if msg:
             ptool.addPortalMessage(msg, level)
-        self.request.response.redirect(self.action)
+        else:
+            self.request.response.redirect(self.action)
 
     @button.buttonAndHandler(_(u"unsubscribe", default=_(u"Unsubscribe")),
                              name='unsubscribe')
@@ -129,7 +139,7 @@ class SubscriberForm(form.SchemaForm):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
         data, errors = self.extractData()
         ptool = getToolByName(self.context, 'plone_utils')
-        if data.has_key('email'):
+        if 'email' in data:
             subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
             res = subs.unsubscribe(data['email'])
             if res == config.ALREADY_UNSUBSCRIBED:

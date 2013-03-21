@@ -21,7 +21,7 @@ from five import grok
 
 def validateEmail(value):
     if value and not checkEmail(value):
-        raise Invalid(u"Neplatný formát emailu")
+        raise Invalid(_(u"Invalid email format"))
     return True
 
 
