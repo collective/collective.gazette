@@ -2,7 +2,6 @@ from Acquisition import aq_inner
 from zope.component import getMultiAdapter
 from five import grok
 from zope import schema
-from zope.app.component.hooks import getSite
 from plone.directives import form
 from z3c.form import button
 from cornerstone.soup import getSoup
@@ -18,6 +17,11 @@ from collective.gazette.interfaces import IGazetteLayer
 from collective.gazette.interfaces import IGazetteSubscription
 
 from collective.gazette import gazetteMessageFactory as _
+
+try:
+    from zope.component.hooks import getSite
+except ImportError:
+    from zope.app.component.hooks import getSite
 
 
 def validateEmail(value):

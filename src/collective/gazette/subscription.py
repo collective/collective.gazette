@@ -6,7 +6,6 @@ from zope.interface import implements
 from zope.component import adapts
 from zope.publisher.interfaces.http import IHTTPRequest
 from Products.CMFCore.utils import getToolByName
-from plone.app.dexterity.behaviors.metadata import _
 from cornerstone.soup import getSoup
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.stringinterp.interfaces import IStringInterpolator
@@ -15,6 +14,7 @@ from collective.gazette.gazettefolder import IGazetteFolder
 from collective.gazette.interfaces import IGazetteSubscription
 from collective.gazette import utils
 from collective.gazette import config
+from collective.gazette import gazetteMessageFactory as _
 
 
 def GenerateSecret(length=64):
