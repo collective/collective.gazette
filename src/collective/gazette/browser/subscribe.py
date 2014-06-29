@@ -2,13 +2,13 @@ from Acquisition import aq_inner
 from zope.component import getMultiAdapter
 from five import grok
 from zope import schema
+from zope.interface import Invalid
 from plone.directives import form
 from z3c.form import button
 from cornerstone.soup import getSoup
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 from zExceptions import Forbidden
-from zope.interface import Invalid
 
 from collective.gazette.utils import checkEmail
 from collective.gazette import config
@@ -30,6 +30,12 @@ def validateEmail(value):
     return True
 
 
+def validateAccept(value):
+    if not (value is True):
+        raise Invalid(_(u"You must accept terms of service"))
+    return True
+
+
 class ISubscriberSchema(form.Schema):
     form.mode(for_member='hidden')
     for_member = schema.TextLine(title=_(u"You are logged in. The following details will be used for your subscription"), required=False)
@@ -39,7 +45,7 @@ class ISubscriberSchema(form.Schema):
     active = schema.Bool(title=u"Active")
     form.omitted('username')
     username = schema.Bool(title=u"Username, if member")
-    tos = schema.Bool(title=u"TOS")
+    tos = schema.Bool(title=u"TOS", required=False)
 
 
 @form.default_value(field=ISubscriberSchema['email'])
@@ -81,6 +87,8 @@ class SubscriberForm(form.SchemaForm):
     def updateFields(self):
         super(SubscriberForm, self).updateFields()
         self.fields['tos'].field.title = self.context.subscription_tos_text
+        if self.context.subscription_require_tos:
+            self.fields['tos'].field.constraint = validateAccept
 
     def updateWidgets(self):
         super(SubscriberForm, self).updateWidgets()

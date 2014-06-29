@@ -70,20 +70,34 @@ class SubscriptionTest(unittest.TestCase):
         # empty form
         request = self.request
         adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)
+        self.gfolder.subscription_require_tos = True
 
-        subscriberForm = getMultiAdapter((self.context, request),
+        subscriberForm = getMultiAdapter((self.gfolder, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
         self.assertEquals(len(errors), 1)
         self.assertEquals(adapter.subscribe('', ''), INVALID_DATA)
 
+        self.gfolder.subscription_require_tos = False
+        subscriberForm = getMultiAdapter((self.gfolder, request),
+                                      name=u"subscriber-form")
+        subscriberForm.update()
+        data, errors = subscriberForm.extractData()
+
+        self.assertEquals(len(errors), 1)  # FIXME - there should be 1 in this test - TOS is disabled
+        self.assertEquals(adapter.subscribe('', ''), INVALID_DATA)
+
         # fill email only
-        request.form = {'form.widgets.email': u'tester@test.com'}
+        request.form = {
+            'form.widgets.email': u'tester@test.com',
+            'form.widgets.tos:list': u'selected',
+        }
         subscriberForm = getMultiAdapter((self.context, request),
                                       name=u"subscriber-form")
         subscriberForm.update()
         data, errors = subscriberForm.extractData()
+
         self.assertEquals(len(errors), 0)
         self.assertEquals(adapter.subscribe('tester@test.com', ''), WAITING_FOR_CONFIRMATION)
         self.assertEquals(len(self.mailhost.messages), 1)
@@ -156,6 +170,8 @@ class SubscriptionTest(unittest.TestCase):
         user = self.portal.acl_users.getUserById('user1')
         user.setProperties(email='user@dummy.com', fullname='Joe User')
         login(self.portal, 'user1')
+
+        self.gfolder.subscription_require_tos = False
 
         request = self.request
         adapter = getMultiAdapter((self.gfolder, request), IGazetteSubscription)

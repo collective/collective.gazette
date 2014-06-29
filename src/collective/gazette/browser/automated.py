@@ -62,7 +62,7 @@ class AutomatedView(grok.View):
             fp.close()
             # Run wkhtmltopdf and generate the PDF
             targetpath = os.path.join(tempdir, 'issue.pdf')
-            result = subprocess.call(["wkhtmltopdf", 'file://%s' % fullpath, '%s' % targetpath])
+            result = subprocess.call(["wkhtmltopdf", '-q', 'file://%s' % fullpath, '%s' % targetpath])
             if result == 0:
                 return open(targetpath, 'rb').read()
             else:
