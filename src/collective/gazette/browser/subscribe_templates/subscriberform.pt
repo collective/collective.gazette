@@ -9,7 +9,7 @@
 
         <h1 class="documentFirstHeading" tal:content="view/label | nothing" />
 
-        <p tal:content="structure context/subscription_prolog/output"></p>
+        <p tal:content="structure context/subscription_prolog/output | nothing"></p>
 
         <div id="content-core">
             <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
