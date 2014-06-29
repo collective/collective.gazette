@@ -2,13 +2,13 @@
 <object name="gazette.GazetteIssue" meta_type="Dexterity FTI"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="collective.gazette">
-    
+
     <!-- Basic properties -->
     <property name="title" i18n:translate="">Gazette issue</property>
     <property name="description" i18n:translate="">Issue of a newsletter</property>
     <property name="content_icon">document_icon.png</property>
     <property name="allow_discussion">False</property>
-    
+
     <!-- Hierarchy control -->
     <property name="global_allow">False</property>
     <property name="filter_content_types">True</property>
@@ -16,26 +16,26 @@
         <element value="File" />
         <element value="Image" />
     </property>
-    
+
     <!-- Schema, class and security -->
-    <property name="schema">collective.gazette.issue.IGazetteIssue</property> 
-    <property name="klass">plone.dexterity.content.Container</property>
+    <property name="schema">collective.gazette.issue.IGazetteIssue</property>
+    <property name="klass">collective.gazette.issue.GazetteIssue</property>
     <property name="add_permission">collective.gazette.AddGazetteIssue</property>
- 
+
     <!-- enabled behaviors -->
     <property name="behaviors">
         <element value="plone.app.dexterity.behaviors.metadata.IDublinCore" />
         <element value="plone.app.content.interfaces.INameFromTitle" />
         <element value="plone.app.referenceablebehavior.referenceable.IReferenceable" />
     </property>
-    
+
     <!-- Views and aliases -->
     <property name="default_view">view</property>
     <property name="default_view_fallback">False</property>
     <property name="view_methods">
         <element value="view"/>
     </property>
-    
+
     <alias from="(Default)" to="(selected layout)"/>
     <alias from="edit" to="@@edit"/>
     <alias from="sharing" to="@@sharing"/>

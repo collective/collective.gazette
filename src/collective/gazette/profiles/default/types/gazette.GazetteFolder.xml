@@ -18,7 +18,7 @@
 
     <!-- Schema, class and security -->
     <property name="schema">collective.gazette.gazettefolder.IGazetteFolder</property>
-    <property name="klass">plone.dexterity.content.Container</property>
+    <property name="klass">collective.gazette.gazettefolder.GazetteFolder</property>
     <property name="add_permission">collective.gazette.AddGazetteFolder</property>
 
     <!-- enabled behaviors -->

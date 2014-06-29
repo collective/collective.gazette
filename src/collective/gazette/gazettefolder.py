@@ -12,6 +12,7 @@ from plone.app.textfield import RichText
 from collective.gazette import gazetteMessageFactory as _
 from plone.directives import form
 from zope import schema
+from plone.dexterity.content import Container
 from z3c.relationfield.schema import RelationChoice
 from collective.gazette.utils import checkEmail
 from collective.gazette.utils import FieldWidgetFactory
@@ -138,6 +139,10 @@ IGazetteFolder.setTaggedValue(FIELDSETS_KEY,
                                                       u'Issues will be created automatically and marked as sent every time you call '
                                                       u'the @@auto-issue page.')
                                           )])
+
+
+class GazetteFolder(Container):
+    pass
 
 
 class View(grok.View):

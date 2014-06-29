@@ -3,6 +3,7 @@ from DateTime import DateTime
 from plone.app.textfield import RichText
 from plone.indexer import indexer
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
+from plone.dexterity.content import Container
 
 from zope import schema
 from plone.directives import form
@@ -21,6 +22,7 @@ class IGazetteIssue(form.Schema):
     providers = schema.List(
         required=False,
         title=_(u'Providers'),
+        default=[],
         value_type=schema.TextLine()
     )
 
@@ -30,6 +32,10 @@ class IGazetteIssue(form.Schema):
         title=_(u'Sent at'),
         description=_(u'Date, when last newsletter was sent'),
     )
+
+
+class GazetteIssue(Container):
+    pass
 
 
 # Use catalog 'start' index for sent_at for Gazette
