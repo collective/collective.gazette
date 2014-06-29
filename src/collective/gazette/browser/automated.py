@@ -9,6 +9,7 @@ from datetime import datetime
 from Acquisition import aq_inner
 from smtplib import SMTPException
 from smtplib import SMTPRecipientsRefused
+from plone.app.textfield.value import RichTextValue
 
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
@@ -96,9 +97,17 @@ class AutomatedView(grok.View):
             gid = 'issue-%s-%d' % (now.strftime("%Y-%m-%d-%H-%M-%S.%f"), idx)
         # create anonymous issue text to be stored to portal
         text = safe_unicode(base_text)
+        auto_text = u''
+        provider_names = []
         for p in providers:
-            text += safe_unicode(p.get_gazette_text(context, None))
+            auto_text += safe_unicode(p.get_gazette_text(context, None))
+            provider_names.append(repr(p))
 
+        if not auto_text:
+            # There is no automatically geenrated text. Discard sending of newsletter.
+            return 'Nothing to send'
+
+        text = text + auto_text
         # Create PDF version of the newsletter using wkhtml2pdf as archive of the issue
         pdf_raw = self.make_pdf(text, html_only)
         if not pdf_raw:
@@ -109,8 +118,8 @@ class AutomatedView(grok.View):
             gazette = context[gid]
             # Fill the newly create Gazette object with generated data
             gazette.title = subject
-            gazette.text = text
-            gazette.providers = ()
+            gazette.text = RichTextValue(text, mimeType='text/html', outputMimeType='text/html')
+            gazette.providers = provider_names
             gazette.sent_at = now
             try:
                 # ignore if there is no publish option for now

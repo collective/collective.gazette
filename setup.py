@@ -50,6 +50,7 @@ setup(name='collective.gazette',
                         'plone.formwidget.contenttree',
                         'plone.directives.form',
                         'z3c.relationfield',
+                        'plone.app.referenceablebehavior',
                         ],
       extras_require={
         'test': ['plone.app.testing'],

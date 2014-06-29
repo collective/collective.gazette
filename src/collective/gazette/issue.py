@@ -2,11 +2,11 @@
 from DateTime import DateTime
 from plone.app.textfield import RichText
 from plone.indexer import indexer
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 
 from zope import schema
 from plone.directives import form
 from five import grok
-
 from collective.gazette import gazetteMessageFactory as _
 
 
@@ -17,13 +17,11 @@ class IGazetteIssue(form.Schema):
         required=False,
     )
 
+    form.mode(providers='display')
     providers = schema.List(
         required=False,
         title=_(u'Providers'),
-        default=[],
-        value_type=schema.Choice(
-            vocabulary='collective.gazette.ProvidersVocabulary',
-        )
+        value_type=schema.TextLine()
     )
 
     form.mode(sent_at='display')
@@ -42,3 +40,12 @@ def start_indexer(obj):
     else:
         return DateTime()
 grok.global_adapter(start_indexer, name="start")
+
+
+@grok.subscribe(IGazetteIssue, IObjectRemovedEvent)
+def issue_removed(obj, event):
+    parent = obj.__parent__
+    if parent is not None:
+        if parent.most_recent_issue == obj:
+            parent.most_recent_issue = None
+
