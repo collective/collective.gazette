@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.gazette\n"
-"POT-Creation-Date: 2013-03-16 12:58+0000\n"
-"PO-Revision-Date: 2013-03-16 10:41+0100\n"
+"POT-Creation-Date: 2014-06-29 10:17+0000\n"
+"PO-Revision-Date: 2014-06-29 12:18+0100\n"
 "Last-Translator: Radim Novotny <novotny.radim@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -10,12 +10,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "X-Poedit-Language: Czech\n"
+"Language-Team: \n"
 
 #: ./portlets/gazetteportlet.py:69
 msgid "Add Gazette portlet"
 msgstr "Přidat Newsletter portlet"
 
-#: ./gazettefolder.py:86
+#: ./gazettefolder.py:87
 msgid "Automated issue email subject"
 msgstr "Předmět automatického vydání"
 
@@ -35,11 +36,11 @@ msgstr "Zobrazí přehled před vlastním odesláním newsletteru a následně u
 msgid "Edit Gazette Portlet"
 msgstr "Upravit newsletter portlet"
 
-#: ./browser/subscribe.py:32
+#: ./browser/subscribe.py:42
 msgid "Email"
 msgstr "E-mail"
 
-#: ./gazettefolder.py:87
+#: ./gazettefolder.py:88
 msgid "Enter email subject. You can use any strftime compatible formatting. The current date and time will be used to format date/time."
 msgstr "Zadejte předmět emailu. Můžete použít formát kompatibilní s Python datetime.strftime. Pro formátování bude použito aktuální datum a čas v okamčiku odeslání newsletteru."
 
@@ -47,7 +48,7 @@ msgstr "Zadejte předmět emailu. Můžete použít formát kompatibilní s Pyth
 msgid "Folder storing different issues of a newsletter"
 msgstr "Složka obsahující jednotlivá vydání newsletteru"
 
-#: ./browser/subscribe.py:33
+#: ./browser/subscribe.py:43
 msgid "Fullname"
 msgstr "Jméno a příjmení"
 
@@ -63,7 +64,7 @@ msgstr "Složka pro newslettery"
 msgid "Gazette folder"
 msgstr "Složka pro newslettery"
 
-#: ./gazettefolder.py:65
+#: ./gazettefolder.py:66
 msgid "Gazette footer text"
 msgstr "Patička newsletteru"
 
@@ -83,20 +84,20 @@ msgstr "Testovací newsletter byl odeslán na: $email"
 msgid "Imported subscribers: ${imported}, Invalid: ${invalid}, Duplicates: ${duplicates}"
 msgstr "Import dokončen. Importováno: ${imported}, Neplatných: ${invalid}, Duplicitních: ${duplicates}"
 
-#: ./browser/subscribe.py:25
-#: ./gazettefolder.py:24
+#: ./browser/subscribe.py:29
+#: ./gazettefolder.py:25
 msgid "Invalid email format"
-msgstr ""
+msgstr "Neplatný formát emailu"
 
-#: ./browser/subscribe.py:116
+#: ./browser/subscribe.py:129
 msgid "Invalid form data."
 msgstr "Neplatná data."
 
-#: ./browser/subscribe.py:150
+#: ./browser/subscribe.py:164
 msgid "Invalid form data. Email is missing."
 msgstr "Neplatná data. Chybí email."
 
-#: ./browser/subscribe.py:165
+#: ./browser/subscribe.py:179
 msgid "Invalid key"
 msgstr "Neplatný klíč"
 
@@ -120,15 +121,15 @@ msgstr "Aktivujte prosím vaše přihlášení"
 msgid "Please confirm deactivation of your subscription"
 msgstr "Potvrďte prosím zrušení odběru"
 
-#: ./gazettefolder.py:66
+#: ./gazettefolder.py:67
 msgid "Please enter text appended to each email sent to users. It should contain $url placeholder which will be replaced with unsubscription url link"
 msgstr "Zadejte prosím text, který bude připojen ke každému emailu s newsletterem. Měl by obsahovat značku $url která bude nahrazena odkazem na odhlášení odběru."
 
-#: ./gazettefolder.py:58
+#: ./gazettefolder.py:59
 msgid "Please enter text displayed on subscription page as a label for Terms of Service checkbox."
 msgstr "Zadejte prosím text, který se zobrazí na stránce s přihlášením k newsletteru jako nadpis pole \"Souhlasím s podmínkami...\""
 
-#: ./gazettefolder.py:44
+#: ./gazettefolder.py:45
 msgid "Please enter text displayed on subscription page before fields for fullname and email."
 msgstr "Zadejte prosím text, který se zobrazí jako úvodní text na stránce s přihlášením k newsletteru."
 
@@ -136,15 +137,15 @@ msgstr "Zadejte prosím text, který se zobrazí jako úvodní text na stránce 
 msgid "Please select a gazette users will be subscribed to"
 msgstr "Vyberte prosím newsletter, ke kterému se budou uživatelé přihlašovat."
 
-#: ./issue.py:22
+#: ./issue.py:24
 msgid "Providers"
 msgstr "Poskytovatelé obsahu"
 
-#: ./gazettefolder.py:103
+#: ./gazettefolder.py:104
 msgid "Providers (for automated newsletters)"
 msgstr "Poskytovatelé obsahu (pro automatické newslettery)"
 
-#: ./gazettefolder.py:52
+#: ./gazettefolder.py:53
 msgid "Require confirmation of TOS on the subscription screen?"
 msgstr "Vyžadovat souhlas s podmínkami před přihlášením k newsletteru?"
 
@@ -160,23 +161,23 @@ msgstr "Datum odeslání"
 msgid "Subscribers"
 msgstr "Odběratelé"
 
-#: ./gazettefolder.py:57
+#: ./gazettefolder.py:58
 msgid "Subscription TOS text"
 msgstr "Text souhlasu s podmínkami"
 
-#: ./browser/subscribe.py:128
+#: ./browser/subscribe.py:141
 msgid "Subscription confirmation email has been sent. Please follow instruction in the email."
 msgstr "Email pro potvrzení přihlášení byl odeslán. Postupujte prosím podle instrukcí v emailu."
 
-#: ./browser/subscribe.py:68
+#: ./browser/subscribe.py:78
 msgid "Subscription form"
 msgstr "Registrace k odběru"
 
-#: ./gazettefolder.py:43
+#: ./gazettefolder.py:44
 msgid "Subscription prolog"
 msgstr "Text před přihlašovacími údaji"
 
-#: ./browser/subscribe.py:148
+#: ./browser/subscribe.py:162
 msgid "Such subscription does not exist."
 msgstr "Tato email adresa není registrována k odběru"
 
@@ -184,7 +185,7 @@ msgstr "Tato email adresa není registrována k odběru"
 msgid "Test automatic issue"
 msgstr "Otestovat automatické vydání"
 
-#: ./gazettefolder.py:35
+#: ./gazettefolder.py:36
 msgid "Test email"
 msgstr "Testovací email"
 
@@ -192,7 +193,7 @@ msgstr "Testovací email"
 msgid "Test send"
 msgstr "Testovací newsletter"
 
-#: ./gazettefolder.py:36
+#: ./gazettefolder.py:37
 msgid "Testing email address"
 msgstr "Testovací email adresa"
 
@@ -200,7 +201,7 @@ msgstr "Testovací email adresa"
 msgid "This portlet displays gazette subscription box."
 msgstr "Portlet zobrazí možnost přihlášení k odběru newsletteru"
 
-#: ./browser/subscribe.py:126
+#: ./browser/subscribe.py:139
 msgid "This subscription already exists."
 msgstr "Tato email adresa je již registrována."
 
@@ -208,7 +209,7 @@ msgstr "Tato email adresa je již registrována."
 msgid "This will raise auto-issue process in testing mode"
 msgstr "Bute spuštěn test automatického vydání. Do vydání budou zahrnuta data od posledního vydání newsletteru. Výsledek bude zobrazen ve formě PDF souboru."
 
-#: ./browser/subscribe.py:146
+#: ./browser/subscribe.py:160
 msgid "Unsubscribe confirmation email has been sent. Please follow instruction in the email."
 msgstr "Potvrzovací email byl odeslán. Postupujte prosím podle instrukcí v emailu."
 
@@ -216,27 +217,27 @@ msgstr "Potvrzovací email byl odeslán. Postupujte prosím podle instrukcí v e
 msgid "XLS file is empty"
 msgstr "XLS soubor je prázdný"
 
-#: ./browser/subscribe.py:31
+#: ./browser/subscribe.py:41
 msgid "You are logged in. The following details will be used for your subscription"
 msgstr "Jste přihlášen(a) do portálu. Pro registraci newsletteru budou použity následující údaje:"
 
-#: ./browser/subscribe.py:144
+#: ./browser/subscribe.py:158
 msgid "You are not subscribed."
 msgstr "Nejste zaregistrován(a) k odběru."
 
-#: ./browser/subscribe.py:108
+#: ./browser/subscribe.py:35
 msgid "You must accept terms of service"
 msgstr "Musíte souhlasit s podmínkami přihlášení"
 
-#: ./browser/subscribe.py:171
+#: ./browser/subscribe.py:185
 msgid "Your subscription has been successfully activated."
 msgstr "Vaše registrace k odběru byla úspěšně aktivována."
 
-#: ./browser/subscribe.py:189
+#: ./browser/subscribe.py:203
 msgid "Your subscription has been successfully deactivated."
 msgstr "Vaše registrace k odběru byla úspěšně zrušena."
 
-#: ./browser/subscribe.py:120
+#: ./browser/subscribe.py:133
 msgid "Your user account has no email defined."
 msgstr "Váš uživatelský účet nemá zadaný email."
 
@@ -251,12 +252,12 @@ msgid "description_gazette_portlet"
 msgstr "Portlet, který umožňuje přihlášení k odběru newsletteru"
 
 #. Default: "Settings for automated issues. If you want to automatically generate issues, for example from cron every week, check this field and set text and providers fields below. Call @@auto-issue browser view in regular intervals on this GazetteFolder. Issues will be created automatically and marked as sent every time you call the @@auto-issue page."
-#: ./gazettefolder.py:134
+#: ./gazettefolder.py:135
 msgid "fieldset_help_auto_issues"
 msgstr "Nastavení pro automatická vydáníé newsletteru. Pokud chcete automaticky generovat vydání newsletteru, například každý týden, pak zaškrtněte toto pole, vyplňte text a seznam poskytovatelů níže. Voláním /@@auto-issue na složku newsletteru můžete pravidelně generovat vydání."
 
 #. Default: "Automated issues"
-#: ./gazettefolder.py:133
+#: ./gazettefolder.py:134
 msgid "fieldset_label_auto_issues"
 msgstr "Automatické vydání"
 
@@ -271,12 +272,12 @@ msgid "heading_subscribers"
 msgstr "Seznam přihlášených"
 
 #. Default: "This field contains base of HTML file which will be used for generating PDF version of the newsletter.It must contain ${body} element which will be replaced by actual issue HTML code."
-#: ./gazettefolder.py:124
+#: ./gazettefolder.py:125
 msgid "help_auto_template"
 msgstr "Toto pole obsahuje základní HTML, které se použije pro vygenerování PDF verze newsletteru. Musí obsahovat prvek ${body} který bude nahrazen příslušným HTML."
 
 #. Default: "Initial body text for automated newsletters. See also \"Providers\" field below. Text may contain strftime formatting."
-#: ./gazettefolder.py:95
+#: ./gazettefolder.py:96
 msgid "help_auto_text"
 msgstr "Úvodní text pro automatické newslettery. Viz také \"Poskytovatelé\" níže. Text může obsahovatr Python strftime formátování."
 
@@ -296,17 +297,17 @@ msgid "label_all"
 msgstr "Vše"
 
 #. Default: "Enable automated newsletters"
-#: ./gazettefolder.py:81
+#: ./gazettefolder.py:82
 msgid "label_auto_enabled"
 msgstr "Povolit automatické newslettery"
 
 #. Default: "Body Text (for automated newsletters)"
-#: ./gazettefolder.py:94
+#: ./gazettefolder.py:95
 msgid "label_auto_text"
 msgstr "Tělo textu - pro automatické newslettery"
 
 #. Default: "Body Text. Please note, title of this item is used as email subject."
-#: ./issue.py:16
+#: ./issue.py:17
 msgid "label_body_text"
 msgstr "Obsah newsletteru. Pokud chcete nastavit předmět emailu s newsletterem, vyplňte vhodný název položky výše."
 
@@ -321,7 +322,7 @@ msgid "label_inactive_subscribers"
 msgstr "Neaktivní odběratelé:"
 
 #. Default: "Most recent issue of this gazette. This field is set automatically."
-#: ./gazettefolder.py:75
+#: ./gazettefolder.py:76
 msgid "label_most_recent_issue"
 msgstr "Nejnovější vydání - toto pole je nastavováno automaticky."
 
@@ -358,7 +359,7 @@ msgid "legend_search_subscribers"
 msgstr "Vyhledat odběratele"
 
 #. Default: "Subscribe"
-#: ./browser/subscribe.py:95
+#: ./browser/subscribe.py:107
 msgid "subscribe"
 msgstr "Přihlásit"
 
@@ -423,7 +424,7 @@ msgid "text_subscriber_info"
 msgstr "Počet odběratelů: ${count}"
 
 #. Default: "HTML template for PDF version of the automated issue"
-#: ./gazettefolder.py:123
+#: ./gazettefolder.py:124
 msgid "title_auto_template"
 msgstr "HTML šablona pro PDF verzi automatického newsletteru"
 
@@ -433,7 +434,7 @@ msgid "title_gazette_portlet"
 msgstr "Portlet newsletteru"
 
 #. Default: "Unsubscribe"
-#: ./browser/subscribe.py:134
+#: ./browser/subscribe.py:148
 msgid "unsubscribe"
 msgstr "Odhlásit"
 

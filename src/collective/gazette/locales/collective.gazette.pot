@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-16 12:58+0000\n"
+"POT-Creation-Date: 2014-06-29 10:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Add Gazette portlet"
 msgstr ""
 
-#: ./gazettefolder.py:86
+#: ./gazettefolder.py:87
 msgid "Automated issue email subject"
 msgstr ""
 
@@ -41,11 +41,11 @@ msgstr ""
 msgid "Edit Gazette Portlet"
 msgstr ""
 
-#: ./browser/subscribe.py:32
+#: ./browser/subscribe.py:42
 msgid "Email"
 msgstr ""
 
-#: ./gazettefolder.py:87
+#: ./gazettefolder.py:88
 msgid "Enter email subject. You can use any strftime compatible formatting. The current date and time will be used to format date/time."
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Folder storing different issues of a newsletter"
 msgstr ""
 
-#: ./browser/subscribe.py:33
+#: ./browser/subscribe.py:43
 msgid "Fullname"
 msgstr ""
 
@@ -69,7 +69,7 @@ msgstr ""
 msgid "Gazette folder"
 msgstr ""
 
-#: ./gazettefolder.py:65
+#: ./gazettefolder.py:66
 msgid "Gazette footer text"
 msgstr ""
 
@@ -89,20 +89,20 @@ msgstr ""
 msgid "Imported subscribers: ${imported}, Invalid: ${invalid}, Duplicates: ${duplicates}"
 msgstr ""
 
-#: ./browser/subscribe.py:25
-#: ./gazettefolder.py:24
+#: ./browser/subscribe.py:29
+#: ./gazettefolder.py:25
 msgid "Invalid email format"
 msgstr ""
 
-#: ./browser/subscribe.py:116
+#: ./browser/subscribe.py:129
 msgid "Invalid form data."
 msgstr ""
 
-#: ./browser/subscribe.py:150
+#: ./browser/subscribe.py:164
 msgid "Invalid form data. Email is missing."
 msgstr ""
 
-#: ./browser/subscribe.py:165
+#: ./browser/subscribe.py:179
 msgid "Invalid key"
 msgstr ""
 
@@ -126,15 +126,15 @@ msgstr ""
 msgid "Please confirm deactivation of your subscription"
 msgstr ""
 
-#: ./gazettefolder.py:66
+#: ./gazettefolder.py:67
 msgid "Please enter text appended to each email sent to users. It should contain $url placeholder which will be replaced with unsubscription url link"
 msgstr ""
 
-#: ./gazettefolder.py:58
+#: ./gazettefolder.py:59
 msgid "Please enter text displayed on subscription page as a label for Terms of Service checkbox."
 msgstr ""
 
-#: ./gazettefolder.py:44
+#: ./gazettefolder.py:45
 msgid "Please enter text displayed on subscription page before fields for fullname and email."
 msgstr ""
 
@@ -142,15 +142,15 @@ msgstr ""
 msgid "Please select a gazette users will be subscribed to"
 msgstr ""
 
-#: ./issue.py:22
+#: ./issue.py:24
 msgid "Providers"
 msgstr ""
 
-#: ./gazettefolder.py:103
+#: ./gazettefolder.py:104
 msgid "Providers (for automated newsletters)"
 msgstr ""
 
-#: ./gazettefolder.py:52
+#: ./gazettefolder.py:53
 msgid "Require confirmation of TOS on the subscription screen?"
 msgstr ""
 
@@ -166,23 +166,23 @@ msgstr ""
 msgid "Subscribers"
 msgstr ""
 
-#: ./gazettefolder.py:57
+#: ./gazettefolder.py:58
 msgid "Subscription TOS text"
 msgstr ""
 
-#: ./browser/subscribe.py:128
+#: ./browser/subscribe.py:141
 msgid "Subscription confirmation email has been sent. Please follow instruction in the email."
 msgstr ""
 
-#: ./browser/subscribe.py:68
+#: ./browser/subscribe.py:78
 msgid "Subscription form"
 msgstr ""
 
-#: ./gazettefolder.py:43
+#: ./gazettefolder.py:44
 msgid "Subscription prolog"
 msgstr ""
 
-#: ./browser/subscribe.py:148
+#: ./browser/subscribe.py:162
 msgid "Such subscription does not exist."
 msgstr ""
 
@@ -190,7 +190,7 @@ msgstr ""
 msgid "Test automatic issue"
 msgstr ""
 
-#: ./gazettefolder.py:35
+#: ./gazettefolder.py:36
 msgid "Test email"
 msgstr ""
 
@@ -198,7 +198,7 @@ msgstr ""
 msgid "Test send"
 msgstr ""
 
-#: ./gazettefolder.py:36
+#: ./gazettefolder.py:37
 msgid "Testing email address"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "This portlet displays gazette subscription box."
 msgstr ""
 
-#: ./browser/subscribe.py:126
+#: ./browser/subscribe.py:139
 msgid "This subscription already exists."
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "This will raise auto-issue process in testing mode"
 msgstr ""
 
-#: ./browser/subscribe.py:146
+#: ./browser/subscribe.py:160
 msgid "Unsubscribe confirmation email has been sent. Please follow instruction in the email."
 msgstr ""
 
@@ -222,27 +222,27 @@ msgstr ""
 msgid "XLS file is empty"
 msgstr ""
 
-#: ./browser/subscribe.py:31
+#: ./browser/subscribe.py:41
 msgid "You are logged in. The following details will be used for your subscription"
 msgstr ""
 
-#: ./browser/subscribe.py:144
+#: ./browser/subscribe.py:158
 msgid "You are not subscribed."
 msgstr ""
 
-#: ./browser/subscribe.py:108
+#: ./browser/subscribe.py:35
 msgid "You must accept terms of service"
 msgstr ""
 
-#: ./browser/subscribe.py:171
+#: ./browser/subscribe.py:185
 msgid "Your subscription has been successfully activated."
 msgstr ""
 
-#: ./browser/subscribe.py:189
+#: ./browser/subscribe.py:203
 msgid "Your subscription has been successfully deactivated."
 msgstr ""
 
-#: ./browser/subscribe.py:120
+#: ./browser/subscribe.py:133
 msgid "Your user account has no email defined."
 msgstr ""
 
@@ -257,12 +257,12 @@ msgid "description_gazette_portlet"
 msgstr ""
 
 #. Default: "Settings for automated issues. If you want to automatically generate issues, for example from cron every week, check this field and set text and providers fields below. Call @@auto-issue browser view in regular intervals on this GazetteFolder. Issues will be created automatically and marked as sent every time you call the @@auto-issue page."
-#: ./gazettefolder.py:134
+#: ./gazettefolder.py:135
 msgid "fieldset_help_auto_issues"
 msgstr ""
 
 #. Default: "Automated issues"
-#: ./gazettefolder.py:133
+#: ./gazettefolder.py:134
 msgid "fieldset_label_auto_issues"
 msgstr ""
 
@@ -277,12 +277,12 @@ msgid "heading_subscribers"
 msgstr ""
 
 #. Default: "This field contains base of HTML file which will be used for generating PDF version of the newsletter.It must contain ${body} element which will be replaced by actual issue HTML code."
-#: ./gazettefolder.py:124
+#: ./gazettefolder.py:125
 msgid "help_auto_template"
 msgstr ""
 
 #. Default: "Initial body text for automated newsletters. See also \"Providers\" field below. Text may contain strftime formatting."
-#: ./gazettefolder.py:95
+#: ./gazettefolder.py:96
 msgid "help_auto_text"
 msgstr ""
 
@@ -302,17 +302,17 @@ msgid "label_all"
 msgstr ""
 
 #. Default: "Enable automated newsletters"
-#: ./gazettefolder.py:81
+#: ./gazettefolder.py:82
 msgid "label_auto_enabled"
 msgstr ""
 
 #. Default: "Body Text (for automated newsletters)"
-#: ./gazettefolder.py:94
+#: ./gazettefolder.py:95
 msgid "label_auto_text"
 msgstr ""
 
 #. Default: "Body Text. Please note, title of this item is used as email subject."
-#: ./issue.py:16
+#: ./issue.py:17
 msgid "label_body_text"
 msgstr ""
 
@@ -327,7 +327,7 @@ msgid "label_inactive_subscribers"
 msgstr ""
 
 #. Default: "Most recent issue of this gazette. This field is set automatically."
-#: ./gazettefolder.py:75
+#: ./gazettefolder.py:76
 msgid "label_most_recent_issue"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgid "legend_search_subscribers"
 msgstr ""
 
 #. Default: "Subscribe"
-#: ./browser/subscribe.py:95
+#: ./browser/subscribe.py:107
 msgid "subscribe"
 msgstr ""
 
@@ -429,7 +429,7 @@ msgid "text_subscriber_info"
 msgstr ""
 
 #. Default: "HTML template for PDF version of the automated issue"
-#: ./gazettefolder.py:123
+#: ./gazettefolder.py:124
 msgid "title_auto_template"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgid "title_gazette_portlet"
 msgstr ""
 
 #. Default: "Unsubscribe"
-#: ./browser/subscribe.py:134
+#: ./browser/subscribe.py:148
 msgid "unsubscribe"
 msgstr ""
 
