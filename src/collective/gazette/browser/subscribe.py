@@ -1,23 +1,28 @@
+# -*- coding: utf-8 -*-
 from Acquisition import aq_inner
 from zope.component import getMultiAdapter
+from z3c.form.interfaces import IAddForm
+from z3c.form.interfaces import IDisplayForm
+from z3c.form.interfaces import IEditForm
 from five import grok
 from zope import schema
 from zope.interface import Invalid
+from plone.autoform import directives
 from plone.directives import form
+from plone.supermodel import model
 from z3c.form import button
 from cornerstone.soup import getSoup
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 from zExceptions import Forbidden
-
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from collective.gazette.utils import checkEmail
 from collective.gazette import config
 from collective.gazette.gazettefolder import IGazetteFolder
 from collective.gazette.interfaces import IGazetteLayer
 from collective.gazette.interfaces import IGazetteSubscription
-
 from collective.gazette import gazetteMessageFactory as _
-
+from collective.gazette.vocabulary import optionalProvidersSource
 try:
     from zope.component.hooks import getSite
 except ImportError:
@@ -36,15 +41,39 @@ def validateAccept(value):
     return True
 
 
-class ISubscriberSchema(form.Schema):
-    form.mode(for_member='hidden')
+class ISubscriberSchema(model.Schema):
+    directives.mode(for_member='hidden')
     for_member = schema.TextLine(title=_(u"You are logged in. The following details will be used for your subscription"), required=False)
+
+    form.widget('email', size=40)
     email = schema.TextLine(title=_(u"Email"), constraint=validateEmail)
+
+    form.widget('fullname', size=40)
     fullname = schema.TextLine(title=_(u"Fullname"), required=False)
-    form.omitted('active')
+
+    directives.omitted('active')
     active = schema.Bool(title=u"Active")
-    form.omitted('username')
+
+    directives.omitted('username')
     username = schema.Bool(title=u"Username, if member")
+
+    form.widget('salutation', size=40)
+    salutation = schema.TextLine(
+        title=_(u"Optional salutation"),
+        required=False,
+        default=u''
+    )
+
+    directives.widget(providers=CheckBoxFieldWidget)
+    providers = schema.List(
+        title=_(u'Optional content'),
+        default=list(),
+        required=False,
+        value_type=schema.Choice(
+            source=optionalProvidersSource,
+        )
+    )
+
     tos = schema.Bool(title=u"TOS", required=False)
 
 
@@ -77,8 +106,23 @@ class SubscriberForm(form.SchemaForm):
     ignoreRequest = False
     label = _(u"Subscription form")
 
+    @property
+    def subscriber(self):
+        uuid = self.request.form.get('uuid')
+        value = None
+        if uuid:
+            value = getattr(self, '_v_subscriber', None)
+            soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
+            for s in soup.query(uuid=uuid):
+                self._v_subscriber = value = s
+                break
+        return value
+
     def getContent(self):
-        return {}
+        result = dict(context=self.context)
+        if self.subscriber:
+            result.update(self.subscriber.__dict__)
+        return result
 
     def update(self):
         super(SubscriberForm, self).update()
@@ -86,23 +130,42 @@ class SubscriberForm(form.SchemaForm):
 
     def updateFields(self):
         super(SubscriberForm, self).updateFields()
-        self.fields['tos'].field.title = self.context.subscription_tos_text
-        if self.context.subscription_require_tos:
-            self.fields['tos'].field.constraint = validateAccept
+        if not self.subscriber:
+            self.fields['tos'].field.title = self.context.subscription_tos_text
+            if self.context.subscription_require_tos:
+                self.fields['tos'].field.constraint = validateAccept
 
     def updateWidgets(self):
         super(SubscriberForm, self).updateWidgets()
-        pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
         context = aq_inner(self.context)
-        if not context.subscription_require_tos:
+        pstate = getMultiAdapter((context, self.request), name='plone_portal_state')
+        cstate = getMultiAdapter((context, self.request), name='plone_context_state')
+        subscriber = self.subscriber
+        if subscriber or not context.subscription_require_tos:
             self.widgets['tos'].mode = 'hidden'
+
+        if not optionalProvidersSource(context):
+            self.widgets['providers'].mode = 'hidden'
 
         if pstate.anonymous():
             self.widgets['for_member'].mode = 'hidden'
         else:
-            self.widgets['for_member'].mode = 'display'
-            self.widgets['email'].mode = 'display'
-            self.widgets['fullname'].mode = 'display'
+            if not cstate.is_editable():
+                # Editor can modify subscribers
+                self.widgets['for_member'].mode = 'display'
+                self.widgets['email'].mode = 'display'
+                self.widgets['fullname'].mode = 'display'
+
+    def updateActions(self):
+        super(SubscriberForm, self).updateActions()
+        self.actions["subscribe"].addClass("context")
+        self.actions["unsubscribe"].addClass("context")
+        subscriber = self.subscriber
+        if subscriber:
+            if subscriber.active:
+                del self.actions['subscribe']
+            if not subscriber.active:
+                del self.actions['unsubscribe']
 
     @button.buttonAndHandler(_(u"subscribe", default=_(u"Subscribe")),
                              name='subscribe')
@@ -110,7 +173,6 @@ class SubscriberForm(form.SchemaForm):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
         context = self.context
         data, errors = self.extractData()
-
         pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
         ptool = getToolByName(self.context, 'plone_utils')
         level = 'info'
@@ -124,7 +186,7 @@ class SubscriberForm(form.SchemaForm):
             subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
             if pstate.anonymous():
                 if 'email' in data:
-                    res = subs.subscribe(data['email'], data['fullname'])
+                    res = subs.subscribe(data['email'], data['fullname'], providers=data['providers'], salutation=data['salutation'])
                 else:
                     msg = _(u'Invalid form data.')
                     level = 'error'
@@ -133,17 +195,15 @@ class SubscriberForm(form.SchemaForm):
                     msg = _(u'Your user account has no email defined.')
                     level = 'error'
                 else:
-                    res = subs.subscribe('', '', username=pstate.member().getUserName())
+                    res = subs.subscribe('', '', username=pstate.member().getUserName(), providers=data['providers'], salutation=data['salutation'])
 
             if res == config.ALREADY_SUBSCRIBED:
                 msg = _(u'This subscription already exists.')
+                ptool.addPortalMessage(msg, level)
             elif res == config.WAITING_FOR_CONFIRMATION:
                 msg = _(u'Subscription confirmation email has been sent. Please follow instruction in the email.')
-
-        if msg:
-            ptool.addPortalMessage(msg, level)
-        else:
-            self.request.response.redirect(self.action)
+                ptool.addPortalMessage(msg, level)
+                self.request.response.redirect(self.context.absolute_url())
 
     @button.buttonAndHandler(_(u"unsubscribe", default=_(u"Unsubscribe")),
                              name='unsubscribe')
@@ -162,7 +222,7 @@ class SubscriberForm(form.SchemaForm):
                 ptool.addPortalMessage(_(u'Such subscription does not exist.'))
         else:
             ptool.addPortalMessage(_(u'Invalid form data. Email is missing.'), 'error')
-        self.request.response.redirect(self.action)
+        self.request.response.redirect(self.context.absolute_url())
 
 
 class ActivationView(BrowserView):

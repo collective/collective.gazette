@@ -1,12 +1,10 @@
 # -*- coding: utf8 -*-
 from plone.formwidget.contenttree import PathSourceBinder
 from collective.gazette.issue import IGazetteIssue
-from plone.z3cform.textlines.textlines import TextLinesFieldWidget
-from plone.supermodel.model import Fieldset
-from plone.supermodel.interfaces import FIELDSETS_KEY
 from Products.CMFPlone.i18nl10n import ulocalized_time
 from Acquisition import aq_inner
 from Products.CMFCore.utils import getToolByName
+from zope.interface import invariant
 from zope.interface import Invalid
 from plone.app.textfield import RichText
 from collective.gazette import gazetteMessageFactory as _
@@ -15,7 +13,6 @@ from zope import schema
 from plone.dexterity.content import Container
 from z3c.relationfield.schema import RelationChoice
 from collective.gazette.utils import checkEmail
-from collective.gazette.utils import FieldWidgetFactory
 from cornerstone.soup.interfaces import ISoupAnnotatable
 from five import grok
 
@@ -24,10 +21,6 @@ def validateEmail(value):
     if value and not checkEmail(value):
         raise Invalid(_(u"Invalid email format"))
     return True
-
-
-TextFieldWidgetRows15 = FieldWidgetFactory(TextLinesFieldWidget,
-                            rows=15)
 
 
 class IGazetteFolder(form.Schema, ISoupAnnotatable):
@@ -78,6 +71,20 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
         source=PathSourceBinder(object_provides=IGazetteIssue.__identifier__)
     )
 
+    form.fieldset(
+        'automated',
+        fields=['auto_enabled', 'auto_subject',
+                'auto_text', 'auto_providers',
+                'auto_optional_providers', 'auto_template'],
+        label=_('fieldset_label_auto_issues', default=u"Automated issues"),
+        description=_('fieldset_help_auto_issues', u'Settings for automated issues. '
+                    u'If you want to automatically generate issues, for example from cron '
+                    u'every week, check this field and set text and providers fields below. '
+                    u'Call @@auto-issue browser view in regular intervals on this GazetteFolder. '
+                    u'Issues will be created automatically and marked as sent every time you call '
+                    u'the @@auto-issue page.')
+        )
+
     auto_enabled = schema.Bool(
         title=_(u'label_auto_enabled', default=u'Enable automated newsletters'),
         default=False,
@@ -108,7 +115,20 @@ class IGazetteFolder(form.Schema, ISoupAnnotatable):
         )
     )
 
-    form.widget(auto_template='collective.gazette.gazettefolder.TextFieldWidgetRows15')
+    auto_optional_providers = schema.List(
+        required=False,
+        title=_(u'Optinal providers (for automated newsletters)'),
+        description=_(u'Select optional providers which will be presented to the '
+                      u'user during subscription process. Please note, the list of '
+                      u'optional providers must be subset of Providers field above.'
+                      ),
+        default=list(),
+        value_type=schema.Choice(
+            vocabulary='collective.gazette.ProvidersVocabulary',
+        )
+    )
+
+    form.widget('auto_template', rows=15)
     auto_template = schema.Text(
         required=False,
         default=u"""<!doctype html>
@@ -127,18 +147,13 @@ ${body}
                       u'It must contain ${body} element which will be replaced by actual issue HTML code.'),
     )
 
-IGazetteFolder.setTaggedValue(FIELDSETS_KEY,
-                                [Fieldset('automated', fields=['auto_enabled', 'auto_subject',
-                                                               'auto_text', 'auto_providers',
-                                                               'auto_template'],
-                                          label=_('fieldset_label_auto_issues', default=u"Automated issues"),
-                                          description=_('fieldset_help_auto_issues', u'Settings for automated issues. '
-                                                      u'If you want to automatically generate issues, for example from cron '
-                                                      u'every week, check this field and set text and providers fields below. '
-                                                      u'Call @@auto-issue browser view in regular intervals on this GazetteFolder. '
-                                                      u'Issues will be created automatically and marked as sent every time you call '
-                                                      u'the @@auto-issue page.')
-                                          )])
+    @invariant
+    def validateInvariants(data):
+        if data.auto_providers or data.auto_optional_providers:
+            ap = set(data.auto_providers)
+            aop = set(data.auto_optional_providers)
+            if not aop.issubset(ap):
+                raise Invalid(_(u"Optional providers list must to be a subset of providers list."))
 
 
 class GazetteFolder(Container):

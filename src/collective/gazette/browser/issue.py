@@ -57,7 +57,8 @@ class GazetteIssueView(BrowserView):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         providers = self._providers()
         subject = context.Title()
-        url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
+        import pdb; pdb.set_trace()
+        url = parent.absolute_url() + '/subscription?uuid=%(uuid)s'
         footer_text = parent.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
         count = 0
@@ -92,10 +93,10 @@ class GazetteIssueView(BrowserView):
             for p in providers:
                 text += p.get_gazette_text(parent, context)
             subject = context.Title()
-            url = parent.absolute_url() + '/subscription?form.widgets.email=%s'
+            url = parent.absolute_url() + '/subscription?uuid=' # NOT SET - just testing
             footer_text = parent.footer.output.replace('${url}', '$url')
             footer_text = footer_text.replace('$url', url)
-            footer = footer_text % email
+            footer = footer_text
             mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
             try:
                 utils.send_mail(context, None, email, 'Tester', subject, mail_text)

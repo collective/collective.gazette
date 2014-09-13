@@ -49,7 +49,7 @@ class IGazetteSubscription(Interface):
     """ simple adapter to IGazetteFolder which allows to subscribe and unsubscribe
         users
     """
-    def subscribe(email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True):
+    def subscribe(email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True, **kwargs):
         """
             Subscribe anonymous or portal member.
             if @username is set, ignore email and fullname and subscribe user with his
@@ -57,6 +57,7 @@ class IGazetteSubscription(Interface):
             If send_activation_mail is True, request for activation email is sent.
             If wait_for_confirmation is not set, user is immediatelly unsubscribed, even if
             activation email is sent.
+            Optional kwargs are set as a Subscriber object attributes
 
             Returns integer code according to config.py constants.
         """

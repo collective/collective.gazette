@@ -1,11 +1,11 @@
 # -*- coding: utf8 -*-
 from five import grok
+from plone import api
 import hashlib
 import random
 from zope.interface import implements
 from zope.component import adapts
 from zope.publisher.interfaces.http import IHTTPRequest
-from Products.CMFCore.utils import getToolByName
 from cornerstone.soup import getSoup
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.stringinterp.interfaces import IStringInterpolator
@@ -53,14 +53,13 @@ class SubscriptionAdapter(object):
             return results[0].active
         return False
 
-    def subscribe(self, email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True):
+    def subscribe(self, email, fullname, username=u'', send_activation_mail=True, wait_for_confirmation=True, **kwargs):
         # find if there is existing subscription
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         email = email.strip()
         if username:
             # ignore everything
-            acl = getToolByName(self.context, 'acl_users')
-            user = acl.getUserById(username)
+            user = api.user.get(username='admin')
             if user:
                 email = user.getProperty('email', '')
                 if email:
@@ -72,21 +71,30 @@ class SubscriptionAdapter(object):
         if not email:
             return config.INVALID_DATA
         results = [r for r in soup.query(email=email)]
+        _marker = object()
         if results:
-            if results[0].active:
-                return config.ALREADY_SUBSCRIBED
-            else:
-                s = results[0]
+            s = results[0]
+            s.email = email
+            s.fullname = fullname
+            if s.active:
+                send_activation_mail = False
                 if wait_for_confirmation:
                     s.key = GenerateSecret()
                     result = config.WAITING_FOR_CONFIRMATION
                 else:
-                    s.active = True
-                    result = config.SUBSCRIPTION_SUCCESSFULL
-                soup.reindex([s])
-                if send_activation_mail:
-                    self.activation_mail(s)
-                return result
+                    result = config.ALREADY_SUBSCRIBED
+            else:
+                s.active = True
+                result = config.SUBSCRIPTION_SUCCESSFULL
+            for k, v in kwargs.items():
+                has_attr = getattr(s, k, _marker)
+                if has_attr is not _marker:
+                    setattr(s, k, v)
+            soup.reindex([s])
+            if send_activation_mail:
+                # Do not send if user is editor and has different email address
+                self.activation_mail(s)
+            return result
         else:
             # new subscriber
             s = Subscriber(email=email, fullname=fullname, active=False, username=username)
@@ -96,6 +104,10 @@ class SubscriptionAdapter(object):
             else:
                 s.active = True
                 result = config.SUBSCRIPTION_SUCCESSFULL
+            for k, v in kwargs.items():
+                has_attr = getattr(s, k, _marker)
+                if has_attr is not _marker:
+                    setattr(s, k, v)
             soup.add(s)
             if send_activation_mail:
                 self.activation_mail(s)
@@ -119,6 +131,21 @@ class SubscriptionAdapter(object):
                 if send_deactivation_mail:
                     self.deactivation_mail(s)
                 return result
+        else:
+            return config.NO_SUCH_SUBSCRIPTION
+
+    def update(self, uuid, **kwargs):
+        soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
+        results = [r for r in soup.query(uuid=uuid)]
+        _marker = object()
+        if results:
+            s = results[0]
+            for k, v in kwargs.items():
+                if k == 'uuid':
+                    continue
+                has_attr = getattr(s, k, _marker)
+                if has_attr is not _marker:
+                    setattr(s, k, v)
         else:
             return config.NO_SUCH_SUBSCRIPTION
 

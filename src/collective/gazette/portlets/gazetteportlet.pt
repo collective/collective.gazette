@@ -14,14 +14,14 @@
 
     <dd class="portletItem"
         tal:define="gazette view/gazette_content">
-        
+
         <form method="post"
               enctype="multipart/form-data"
-              tal:attributes="action string:${gazette/absolute_url}/subscription">
-              
+              tal:attributes="action string:${gazette/absolute_url}/subscription-add">
+
             <label for="email">E-mail:</label>
             <input type="text" name="form.widgets.email" value="" id="email" />
-            
+
             <div class="formControls">
                 <input class="context"
                        type="submit"

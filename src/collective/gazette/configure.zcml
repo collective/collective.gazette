@@ -22,7 +22,7 @@
       name="collective.gazette.subscribers"
       factory=".subscribers.SubscribersCatalog"
       provides="cornerstone.soup.interfaces.ICatalogFactory" />
-        
+
   <utility
     component=".vocabulary.providersVocabularyFactory"
     provides="zope.schema.interfaces.IVocabularyFactory"
@@ -37,5 +37,5 @@
       description="Yet another newsletter product for Plone"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  
+
 </configure>

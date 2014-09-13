@@ -38,6 +38,7 @@ class SubscribersView(BrowserView):
                 email=row.email,
                 active=row.active and ACTIVE or INACTIVE,
                 username=row.username,
+                uuid=row.uuid,
             ))
         return result
 

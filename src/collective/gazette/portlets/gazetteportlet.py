@@ -21,8 +21,8 @@ class IGazettePortlet(IPortletDataProvider):
                              required=True,
                              default=u'',
                              source=SearchableTextSourceBinder(
-                                        query={'object_provides': IGazetteFolder.__identifier__},
-                                        default_query=''),
+                                     query={'object_provides': IGazetteFolder.__identifier__},
+                                     default_query=''),
                             )
 
 

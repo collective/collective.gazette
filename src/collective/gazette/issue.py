@@ -21,7 +21,7 @@ class IGazetteIssue(form.Schema):
     form.mode(providers='display')
     providers = schema.List(
         required=False,
-        title=_(u'Providers'),
+        title=_(u'Providers used'),
         default=[],
         value_type=schema.TextLine()
     )

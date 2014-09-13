@@ -25,36 +25,36 @@
               <legend i18n:translate="legend_search_subscribers">Search subscribers</legend>
               <div class="field">
                   <label for="fulltext" i18n:translate="label_fulltext">Fulltext</label>
-                  <input type="text" 
-                         name="fulltext" 
+                  <input type="text"
+                         name="fulltext"
                          id="fulltext"
                          value=""
                          tal:attributes="value request/fulltext | default" />
               </div>
               <div class="field">
                   <label i18n:translate="label_active">Active?</label>
-                  <input type="radio" 
-                         name="active" 
+                  <input type="radio"
+                         name="active"
                          id="active-yes"
                          value="1"
                          tal:attributes="checked python:request.get('active') == '1' and 'checked' or None" />
                   <label for="active-yes" i18n:translate="label_yes">Yes</label>
 
-                  <input type="radio" 
-                         name="active" 
+                  <input type="radio"
+                         name="active"
                          id="active-no"
                          value="0"
                          tal:attributes="checked python:request.get('active') == '0' and 'checked' or None" />
                   <label for="active-no" i18n:translate="label_no">No</label>
 
-                  <input type="radio" 
-                         name="active" 
+                  <input type="radio"
+                         name="active"
                          id="active-all"
                          value=""
                          tal:attributes="checked python:request.get('active') == '' and 'checked' or None" />
                   <label for="active-all" i18n:translate="label_all">All</label>
               </div>
-              
+
               <div class="formControls">
                   <input type="submit"
                          name="submit"
@@ -62,11 +62,12 @@
                          value="Search"
                          i18n:attributes="value label_search_subscribers" />
               </div>
-          </fieldset> 
+          </fieldset>
     </form>
-    <div class="search-results" 
-         tal:define="results options/searchresults | nothing">
-         
+    <div class="search-results"
+         tal:define="results options/searchresults | nothing;
+                    here_url context/absolute_url">
+
         <table class="listing" tal:condition="results">
             <tr>
                 <th i18n:translate="tableheading_fullname">Fullname</th>
@@ -75,18 +76,19 @@
             </tr>
             <tal:block tal:repeat="row results">
                 <tr tal:attributes="class python:path('repeat/row/odd') and 'odd' or 'even'">
-                    <td tal:content="row/fullname">John Doe</td>
+                    <td><a tal:attributes="href string:${here_url}/subscription-manage?uuid=${row/uuid}"
+                           tal:content="python:row['fullname'] or row['uuid'][:8]">John Doe</a></td>
                     <td tal:content="row/email">john@doe.com</td>
                     <td tal:content="row/active">Yes</td>
                 </tr>
             </tal:block>
         </table>
-        
+
         <p tal:condition="not:results" i18n:translate="text_no_subscribers_found">
             No subscribers found for given query.
         </p>
     </div>
-    
+
     <fieldset>
         <legend i18n:translate="legend_import">Import subscribers</legend>
         <form tal:attributes="action string:${context/absolute_url}/${view/__name__}"
@@ -95,15 +97,15 @@
             <input type="hidden"
                    name="form.import.submitted"
                    value="1" />
-                   
+
             <p i18n:translate="text_import_subscribers">
-                You may upload XLS file with subscribers. First sheet of the 
+                You may upload XLS file with subscribers. First sheet of the
                 file must have at least one column (column A) with email address.
-                Second (optional) column may contain fullname (column B). 
-                Other columns are optional. If A1 does not contain valid email 
+                Second (optional) column may contain fullname (column B).
+                Other columns are optional. If A1 does not contain valid email
                 address, first row is treated as header row.
             </p>
-                   
+
             <input type="file"
                    name="subscribers"
                    />
@@ -114,7 +116,7 @@
                          value="Import"
                          i18n:attributes="value button_import_subscribers" />
               </div>
-                
+
         </form>
     </fieldset>
 </div>
