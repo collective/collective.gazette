@@ -4,20 +4,23 @@
       tal:omit-tag="">
 
 <dl class="portlet portletGazette"
-    i18n:domain="collective.poll">
+    i18n:domain="collective.gazette">
 
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
-        <tal:header i18n:translate="portletheading_gazette">Gazette</tal:header>
+        <tal:header tal:content="view/data/title">Gazette</tal:header>
         <span class="portletTopRight"></span>
     </dt>
 
     <dd class="portletItem"
         tal:define="gazette view/gazette_content">
 
+        <p tal:condition="view/data/description"
+           tal:content="view/data/description"></p>
+
         <form method="post"
               enctype="multipart/form-data"
-              tal:attributes="action string:${gazette/absolute_url}/subscription-add">
+              tal:attributes="action string:${gazette/absolute_url}/subscription">
 
             <label for="email">E-mail:</label>
             <input type="text" name="form.widgets.email" value="" id="email" />
@@ -26,8 +29,8 @@
                 <input class="context"
                        type="submit"
                        name="submit"
-                       value="Submit"
-                       i18n:attributes="value button_submit" />
+                       value="Continue"
+                       i18n:attributes="value button_submit_continue" />
             </div>
         </form>
 

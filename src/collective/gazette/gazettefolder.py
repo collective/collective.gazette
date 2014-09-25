@@ -177,6 +177,6 @@ class View(grok.View):
             result.append(dict(
                 title=brain.Title,
                 url=brain.getURL(),
-                date=ulocalized_time(brain.start, 0, context=context)
+                date=ulocalized_time(brain.start, 1, context=context)
             ))
         return result

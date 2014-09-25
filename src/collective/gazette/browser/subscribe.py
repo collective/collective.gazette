@@ -161,11 +161,14 @@ class SubscriberForm(form.SchemaForm):
         self.actions["subscribe"].addClass("context")
         self.actions["unsubscribe"].addClass("context")
         subscriber = self.subscriber
+
         if subscriber:
             if subscriber.active:
                 del self.actions['subscribe']
             if not subscriber.active:
                 del self.actions['unsubscribe']
+        else:
+            del self.actions['unsubscribe']
 
     @button.buttonAndHandler(_(u"subscribe", default=_(u"Subscribe")),
                              name='subscribe')
@@ -173,7 +176,6 @@ class SubscriberForm(form.SchemaForm):
         """ This form should be used for anonymous subscribers only (not for portal users currently) """
         context = self.context
         data, errors = self.extractData()
-        pstate = getMultiAdapter((self.context, self.request), name='plone_portal_state')
         ptool = getToolByName(self.context, 'plone_utils')
         level = 'info'
         msg = ''
@@ -184,18 +186,11 @@ class SubscriberForm(form.SchemaForm):
 
         if not msg:
             subs = getMultiAdapter((self.context, self.request), interface=IGazetteSubscription)
-            if pstate.anonymous():
-                if 'email' in data:
-                    res = subs.subscribe(data['email'], data['fullname'], providers=data['providers'], salutation=data['salutation'])
-                else:
-                    msg = _(u'Invalid form data.')
-                    level = 'error'
+            if 'email' in data:
+                res = subs.subscribe(data['email'], data['fullname'], providers=data['providers'], salutation=data['salutation'])
             else:
-                if not default_email(self):
-                    msg = _(u'Your user account has no email defined.')
-                    level = 'error'
-                else:
-                    res = subs.subscribe('', '', username=pstate.member().getUserName(), providers=data['providers'], salutation=data['salutation'])
+                msg = _(u'Invalid form data.')
+                level = 'error'
 
             if res == config.ALREADY_SUBSCRIBED:
                 msg = _(u'This subscription already exists.')

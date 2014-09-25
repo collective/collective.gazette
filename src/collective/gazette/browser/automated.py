@@ -82,7 +82,7 @@ class AutomatedView(grok.View):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         # strftime accepts any text, not only strftime characters
         subject = now.strftime(context.auto_subject.encode('utf-8'))
-        url = context.absolute_url() + '/subscription?form.widgets.email=%s'
+        url = context.absolute_url() + '/subscription?uuid=%(uuid)s'
         footer_text = context.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
         count = 0
@@ -99,6 +99,7 @@ class AutomatedView(grok.View):
         text = safe_unicode(base_text)
         auto_text = u''
         provider_names = []
+
         for p in providers:
             auto_text += safe_unicode(p.get_gazette_text(context, None))
             provider_names.append(repr(p))
@@ -138,7 +139,10 @@ class AutomatedView(grok.View):
                 # returns email and fullname taken from memberdata if s.username is set and member exists
                 subscriber_info = s.get_info(context)
                 footer = footer_text % subscriber_info
-                mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
+                mail_text = ""
+                if subscriber_info['salutation']:
+                    mail_text += "%s<br /><br />" % subscriber_info['salutation']
+                mail_text += "%s------------<br />%s" % (text, footer)
                 try:
                     if utils.send_mail(context, None, subscriber_info['email'], subscriber_info['fullname'], subject, mail_text):
                         count += 1

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-13 13:27+0000\n"
+"POT-Creation-Date: 2014-09-25 16:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Active - receives emails"
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:69
+#: ./portlets/gazetteportlet.py:85
 msgid "Add Gazette portlet"
 msgstr ""
 
@@ -33,6 +33,14 @@ msgstr ""
 msgid "Date, when last newsletter was sent"
 msgstr ""
 
+#: ./portlets/gazetteportlet.py:27
+msgid "Description"
+msgstr ""
+
+#: ./portlets/gazetteportlet.py:28
+msgid "Description displayed in the portlet"
+msgstr ""
+
 #: ./profiles/default/actions.xml
 msgid "Directly sends newsletter to test email address"
 msgstr ""
@@ -41,7 +49,7 @@ msgstr ""
 msgid "Display confirmation form and then allows to send gazette to all recipients."
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:78
+#: ./portlets/gazetteportlet.py:94
 msgid "Edit Gazette Portlet"
 msgstr ""
 
@@ -63,15 +71,11 @@ msgstr ""
 msgid "Fullname"
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:37
-msgid "Gazette"
-msgstr ""
-
 #: ./profiles/default/types/gazette.GazetteFolder.xml
 msgid "Gazette Folder"
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:19
+#: ./portlets/gazetteportlet.py:33
 msgid "Gazette folder"
 msgstr ""
 
@@ -79,7 +83,7 @@ msgstr ""
 msgid "Gazette footer text"
 msgstr ""
 
-#: ./browser/issue.py:80
+#: ./browser/issue.py:85
 msgid "Gazette has been sent to $count recipients"
 msgstr ""
 
@@ -87,7 +91,7 @@ msgstr ""
 msgid "Gazette issue"
 msgstr ""
 
-#: ./browser/issue.py:105
+#: ./browser/issue.py:110
 msgid "Gazette test has been sent to $email"
 msgstr ""
 
@@ -101,15 +105,15 @@ msgstr ""
 msgid "Invalid email format"
 msgstr ""
 
-#: ./browser/subscribe.py:191
+#: ./browser/subscribe.py:192
 msgid "Invalid form data."
 msgstr ""
 
-#: ./browser/subscribe.py:224
+#: ./browser/subscribe.py:219
 msgid "Invalid form data. Email is missing."
 msgstr ""
 
-#: ./browser/subscribe.py:239
+#: ./browser/subscribe.py:234
 msgid "Invalid key"
 msgstr ""
 
@@ -125,7 +129,7 @@ msgstr ""
 msgid "Manage subscription form"
 msgstr ""
 
-#: ./browser/issue.py:89
+#: ./browser/issue.py:94
 msgid "No test email set. Please check Gazette folder settings."
 msgstr ""
 
@@ -167,8 +171,12 @@ msgstr ""
 msgid "Please enter text displayed on subscription page before fields for fullname and email."
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:20
+#: ./portlets/gazetteportlet.py:34
 msgid "Please select a gazette users will be subscribed to"
+msgstr ""
+
+#: ./portlets/gazetteportlet.py:21
+msgid "Portlet title"
 msgstr ""
 
 #: ./gazettefolder.py:111
@@ -203,7 +211,7 @@ msgstr ""
 msgid "Subscription TOS text"
 msgstr ""
 
-#: ./browser/subscribe.py:204
+#: ./browser/subscribe.py:199
 msgid "Subscription confirmation email has been sent. Please follow instruction in the email."
 msgstr ""
 
@@ -215,7 +223,7 @@ msgstr ""
 msgid "Subscription prolog"
 msgstr ""
 
-#: ./browser/subscribe.py:222
+#: ./browser/subscribe.py:217
 msgid "Such subscription does not exist."
 msgstr ""
 
@@ -239,11 +247,11 @@ msgstr ""
 msgid "The subscription has been updated."
 msgstr ""
 
-#: ./portlets/gazetteportlet.py:70
+#: ./portlets/gazetteportlet.py:86
 msgid "This portlet displays gazette subscription box."
 msgstr ""
 
-#: ./browser/subscribe.py:201
+#: ./browser/subscribe.py:196
 msgid "This subscription already exists."
 msgstr ""
 
@@ -251,7 +259,7 @@ msgstr ""
 msgid "This will raise auto-issue process in testing mode"
 msgstr ""
 
-#: ./browser/subscribe.py:220
+#: ./browser/subscribe.py:215
 msgid "Unsubscribe confirmation email has been sent. Please follow instruction in the email."
 msgstr ""
 
@@ -263,7 +271,7 @@ msgstr ""
 msgid "You are logged in. The following details will be used for your subscription"
 msgstr ""
 
-#: ./browser/subscribe.py:218
+#: ./browser/subscribe.py:213
 msgid "You are not subscribed."
 msgstr ""
 
@@ -271,21 +279,22 @@ msgstr ""
 msgid "You must accept terms of service"
 msgstr ""
 
-#: ./browser/subscribe.py:245
+#: ./browser/subscribe.py:240
 msgid "Your subscription has been successfully activated."
 msgstr ""
 
-#: ./browser/subscribe.py:263
+#: ./browser/subscribe.py:258
 msgid "Your subscription has been successfully deactivated."
-msgstr ""
-
-#: ./browser/subscribe.py:195
-msgid "Your user account has no email defined."
 msgstr ""
 
 #. Default: "Import"
 #: ./browser/subscribers.pt:113
 msgid "button_import_subscribers"
+msgstr ""
+
+#. Default: "Continue"
+#: ./portlets/gazetteportlet.pt:29
+msgid "button_submit_continue"
 msgstr ""
 
 #. Default: "A portlet which displays gazette subscription box"
@@ -401,7 +410,7 @@ msgid "legend_search_subscribers"
 msgstr ""
 
 #. Default: "Subscribe"
-#: ./browser/subscribe.py:170
+#: ./browser/subscribe.py:173
 msgid "subscribe"
 msgstr ""
 
@@ -476,7 +485,7 @@ msgid "title_gazette_portlet"
 msgstr ""
 
 #. Default: "Unsubscribe"
-#: ./browser/subscribe.py:208
+#: ./browser/subscribe.py:203
 msgid "unsubscribe"
 msgstr ""
 

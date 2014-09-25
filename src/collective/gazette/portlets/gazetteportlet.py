@@ -16,6 +16,20 @@ from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 
 
 class IGazettePortlet(IPortletDataProvider):
+
+    _title = schema.TextLine(
+        title=_(u"Portlet title"),
+        required=True,
+        default=u'Newsletter'
+        )
+
+    description = schema.Text(
+        title=_(u"Description"),
+        description=_(u"Description displayed in the portlet"),
+        required=False,
+        default=u''
+        )
+
     gazette = schema.Choice(title=_(u"Gazette folder"),
                              description=_(u"Please select a gazette users will be subscribed to"),
                              required=True,
@@ -29,12 +43,14 @@ class IGazettePortlet(IPortletDataProvider):
 class Assignment(base.Assignment):
     implements(IGazettePortlet)
 
-    def __init__(self, gazette=u''):
+    def __init__(self, _title=u'Newsletter', gazette=u'', description=u''):
+        self._title = _title
         self.gazette = gazette
+        self.description = description
 
     @property
     def title(self):
-        return _(u"Gazette")
+        return self._title
 
 
 class Renderer(base.Renderer):

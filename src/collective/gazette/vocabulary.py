@@ -17,7 +17,11 @@ def providersVocabularyFactory(context):
 @grok.provider(IContextSourceBinder)
 def optionalProvidersSource(context):
     # context is result of 'getContent' method of SubscriberForm
-    folder = IGazetteFolder(context.get('context'), None)
+    if IGazetteFolder.providedBy(context):
+        folder = context
+    else:
+        folder = IGazetteFolder(context.get('context'), None)
+
     if folder is not None:
         all_providers = providersVocabularyFactory(context)
         providers = folder.auto_optional_providers

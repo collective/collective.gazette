@@ -1,23 +1,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.gazette\n"
-"POT-Creation-Date: 2014-09-13 13:27+0000\n"
-"PO-Revision-Date: 2014-09-13 15:30+0100\n"
+"POT-Creation-Date: 2014-09-25 16:27+0000\n"
+"PO-Revision-Date: 2014-09-25 18:27+0100\n"
 "Last-Translator: Radim Novotny <novotny.radim@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Preferred-Encodings: utf-8 latin1\n"
+"X-Generator: Poedit 1.6.9\n"
 "Language-Team: \n"
 "Language: cs\n"
-"X-Generator: Poedit 1.6.9\n"
 
 #: browser/subscribe-manage.py:35
 msgid "Active - receives emails"
 msgstr "Aktivní - bude dostávat emaily"
 
-#: portlets/gazetteportlet.py:69
+#: portlets/gazetteportlet.py:85
 msgid "Add Gazette portlet"
 msgstr "Přidat Newsletter portlet"
 
@@ -28,6 +28,14 @@ msgstr "Předmět automatického vydání"
 #: issue.py:33
 msgid "Date, when last newsletter was sent"
 msgstr "Datum, kdy byl naposledy newsletter odeslán"
+
+#: portlets/gazetteportlet.py:27
+msgid "Description"
+msgstr "Popis"
+
+#: portlets/gazetteportlet.py:28
+msgid "Description displayed in the portlet"
+msgstr "Popis newsletteru zobrazený v portletu "
 
 #: profiles/default/actions.xml
 msgid "Directly sends newsletter to test email address"
@@ -40,7 +48,7 @@ msgstr ""
 "Zobrazí přehled před vlastním odesláním newsletteru a následně umožní "
 "odeslat newsletter všem přihlášeným."
 
-#: portlets/gazetteportlet.py:78
+#: portlets/gazetteportlet.py:94
 msgid "Edit Gazette Portlet"
 msgstr "Upravit newsletter portlet"
 
@@ -65,15 +73,11 @@ msgstr "Složka obsahující jednotlivá vydání newsletteru"
 msgid "Fullname"
 msgstr "Jméno a příjmení"
 
-#: portlets/gazetteportlet.py:37
-msgid "Gazette"
-msgstr "Newsletter (vydání)"
-
 #: profiles/default/types/gazette.GazetteFolder.xml
 msgid "Gazette Folder"
 msgstr "Složka pro newslettery"
 
-#: portlets/gazetteportlet.py:19
+#: portlets/gazetteportlet.py:33
 msgid "Gazette folder"
 msgstr "Složka pro newslettery"
 
@@ -81,7 +85,7 @@ msgstr "Složka pro newslettery"
 msgid "Gazette footer text"
 msgstr "Patička newsletteru"
 
-#: browser/issue.py:80
+#: browser/issue.py:85
 msgid "Gazette has been sent to $count recipients"
 msgstr "Počet odběratelů, kterým byl odeslán newsletter: $count"
 
@@ -89,7 +93,7 @@ msgstr "Počet odběratelů, kterým byl odeslán newsletter: $count"
 msgid "Gazette issue"
 msgstr "Vydání newsletteru"
 
-#: browser/issue.py:105
+#: browser/issue.py:110
 msgid "Gazette test has been sent to $email"
 msgstr "Testovací newsletter byl odeslán na: $email"
 
@@ -105,15 +109,15 @@ msgstr ""
 msgid "Invalid email format"
 msgstr "Neplatný formát emailu"
 
-#: browser/subscribe.py:191
+#: browser/subscribe.py:192
 msgid "Invalid form data."
 msgstr "Neplatná data."
 
-#: browser/subscribe.py:224
+#: browser/subscribe.py:219
 msgid "Invalid form data. Email is missing."
 msgstr "Neplatná data. Chybí email."
 
-#: browser/subscribe.py:239
+#: browser/subscribe.py:234
 msgid "Invalid key"
 msgstr "Neplatný klíč"
 
@@ -129,7 +133,7 @@ msgstr "Seznam uživatelů, přihlášených k odběru"
 msgid "Manage subscription form"
 msgstr "Správa přihlášení"
 
-#: browser/issue.py:89
+#: browser/issue.py:94
 msgid "No test email set. Please check Gazette folder settings."
 msgstr ""
 "Nebyl zadán testovací email. Zkontrolujte prosím nastavení složky pro "
@@ -184,9 +188,13 @@ msgstr ""
 "Zadejte prosím text, který se zobrazí jako úvodní text na stránce s "
 "přihlášením k newsletteru."
 
-#: portlets/gazetteportlet.py:20
+#: portlets/gazetteportlet.py:34
 msgid "Please select a gazette users will be subscribed to"
 msgstr "Vyberte prosím newsletter, ke kterému se budou uživatelé přihlašovat."
+
+#: portlets/gazetteportlet.py:21
+msgid "Portlet title"
+msgstr "Nadpis portletu"
 
 #: gazettefolder.py:111
 msgid "Providers (for automated newsletters)"
@@ -226,7 +234,7 @@ msgstr "Odběratelé"
 msgid "Subscription TOS text"
 msgstr "Text souhlasu s podmínkami"
 
-#: browser/subscribe.py:204
+#: browser/subscribe.py:199
 msgid ""
 "Subscription confirmation email has been sent. Please follow instruction in "
 "the email."
@@ -242,7 +250,7 @@ msgstr "Registrace k odběru"
 msgid "Subscription prolog"
 msgstr "Text před přihlašovacími údaji"
 
-#: browser/subscribe.py:222
+#: browser/subscribe.py:217
 msgid "Such subscription does not exist."
 msgstr "Tato email adresa není registrována k odběru"
 
@@ -266,11 +274,11 @@ msgstr "Testovací email adresa"
 msgid "The subscription has been updated."
 msgstr "Registrace byla aktualizována."
 
-#: portlets/gazetteportlet.py:70
+#: portlets/gazetteportlet.py:86
 msgid "This portlet displays gazette subscription box."
 msgstr "Portlet zobrazí možnost přihlášení k odběru newsletteru"
 
-#: browser/subscribe.py:201
+#: browser/subscribe.py:196
 msgid "This subscription already exists."
 msgstr "Tato email adresa je již registrována."
 
@@ -280,7 +288,7 @@ msgstr ""
 "Bute spuštěn test automatického vydání. Do vydání budou zahrnuta data od "
 "posledního vydání newsletteru. Výsledek bude zobrazen ve formě PDF souboru."
 
-#: browser/subscribe.py:220
+#: browser/subscribe.py:215
 msgid ""
 "Unsubscribe confirmation email has been sent. Please follow instruction in "
 "the email."
@@ -298,7 +306,7 @@ msgstr ""
 "Jste přihlášen(a) do portálu. Pro registraci newsletteru budou použity "
 "následující údaje:"
 
-#: browser/subscribe.py:218
+#: browser/subscribe.py:213
 msgid "You are not subscribed."
 msgstr "Nejste zaregistrován(a) k odběru."
 
@@ -306,22 +314,23 @@ msgstr "Nejste zaregistrován(a) k odběru."
 msgid "You must accept terms of service"
 msgstr "Musíte souhlasit s podmínkami přihlášení"
 
-#: browser/subscribe.py:245
+#: browser/subscribe.py:240
 msgid "Your subscription has been successfully activated."
 msgstr "Vaše registrace k odběru byla úspěšně aktivována."
 
-#: browser/subscribe.py:263
+#: browser/subscribe.py:258
 msgid "Your subscription has been successfully deactivated."
 msgstr "Vaše registrace k odběru byla úspěšně zrušena."
-
-#: browser/subscribe.py:195
-msgid "Your user account has no email defined."
-msgstr "Váš uživatelský účet nemá zadaný email."
 
 #. Default: "Import"
 #: browser/subscribers.pt:113
 msgid "button_import_subscribers"
 msgstr "Importovat"
+
+#. Default: "Continue"
+#: portlets/gazetteportlet.pt:29
+msgid "button_submit_continue"
+msgstr "Pokračovat..."
 
 #. Default: "A portlet which displays gazette subscription box"
 #: profiles/default/portlets.xml
@@ -445,7 +454,7 @@ msgid "legend_search_subscribers"
 msgstr "Vyhledat odběratele"
 
 #. Default: "Subscribe"
-#: browser/subscribe.py:170
+#: browser/subscribe.py:173
 msgid "subscribe"
 msgstr "Přihlásit"
 
@@ -534,7 +543,7 @@ msgid "title_gazette_portlet"
 msgstr "Portlet newsletteru"
 
 #. Default: "Unsubscribe"
-#: browser/subscribe.py:208
+#: browser/subscribe.py:203
 msgid "unsubscribe"
 msgstr "Odhlásit"
 

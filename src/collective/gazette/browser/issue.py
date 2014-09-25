@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 from zope.component import queryUtility
 from Products.CMFCore.utils import getToolByName
@@ -57,7 +58,7 @@ class GazetteIssueView(BrowserView):
         soup = getSoup(self.context, config.SUBSCRIBERS_SOUP_ID)
         providers = self._providers()
         subject = context.Title()
-        import pdb; pdb.set_trace()
+
         url = parent.absolute_url() + '/subscription?uuid=%(uuid)s'
         footer_text = parent.footer.output.replace('${url}', '$url')
         footer_text = footer_text.replace('$url', url)
@@ -65,11 +66,15 @@ class GazetteIssueView(BrowserView):
         text = context.text.output + '\n'
         for p in providers:
             text += p.get_gazette_text(parent, context)
+
         for s in soup.query(active=True):
             # returns email and fullname taken from memberdata if s.username is set and member exists
             subscriber_info = s.get_info(context)
             footer = footer_text % subscriber_info
-            mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
+            mail_text = ""
+            if subscriber_info['salutation']:
+                mail_text += "%s<br /><br />" % subscriber_info['salutation']
+            mail_text += "%s------------<br />%s" % (text, footer)
             try:
                 if utils.send_mail(context, None, subscriber_info['email'], subscriber_info['fullname'], subject, mail_text):
                     count += 1
@@ -93,11 +98,11 @@ class GazetteIssueView(BrowserView):
             for p in providers:
                 text += p.get_gazette_text(parent, context)
             subject = context.Title()
-            url = parent.absolute_url() + '/subscription?uuid=' # NOT SET - just testing
+            url = parent.absolute_url() + '/subscription?uuid='  # NOT SET - just testing
             footer_text = parent.footer.output.replace('${url}', '$url')
             footer_text = footer_text.replace('$url', url)
             footer = footer_text
-            mail_text = "%s<p>------------<br />%s</p>" % (text, footer)
+            mail_text = "%s------------<br />%s" % (text, footer)
             try:
                 utils.send_mail(context, None, email, 'Tester', subject, mail_text)
             except (SMTPException, SMTPRecipientsRefused):
